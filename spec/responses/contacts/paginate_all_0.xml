@@ -1,0 +1,45 @@
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:openSearch="http://a9.com/-/spec/opensearchrss/1.0/" xmlns:gContact="http://schemas.google.com/contact/2008" xmlns:batch="http://schemas.google.com/gdata/batch" xmlns:gd="http://schemas.google.com/g/2005">
+  <id>john.doe@gmail.com</id>
+  <updated>2012-04-03T01:31:38.249Z</updated>
+  <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+  <title type="text">Johnny's Contacts</title>
+  <link rel="alternate" type="text/html" href="http://www.google.com/"/>
+  <link rel="http://schemas.google.com/g/2005#feed" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full"/>
+  <link rel="http://schemas.google.com/g/2005#post" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full"/>
+  <link rel="http://schemas.google.com/g/2005#batch" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/batch"/>
+  <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full?max-results=2"/>
+  <link rel="next" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full?start-index=3&amp;max-results=2"/>
+  <author>
+    <name>Johnny</name>
+    <email>john.doe@gmail.com</email>
+  </author>
+  <generator version="1.0" uri="http://www.google.com/m8/feeds">Contacts</generator>
+  <openSearch:totalResults>5</openSearch:totalResults>
+  <openSearch:startIndex>1</openSearch:startIndex>
+  <openSearch:itemsPerPage>2</openSearch:itemsPerPage>
+  <entry>
+    <id>http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/908f380f4c2f81</id>
+    <updated>2011-07-27T00:35:14.340Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+    <title type="text">Jack 1</title>
+    <link rel="http://schemas.google.com/contacts/2008/rel#edit-photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/908f380f4c2f81/OTYxMjM3OTMyNzc1ODAxMD"/>
+    <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/908f380f4c2f81"/>
+    <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/908f380f4c2f81"/>
+    <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/908f380f4c2f81/6694635726310080"/>
+  </entry>
+  <entry>
+    <id>http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/d7c3474a8da0bd</id>
+    <updated>2012-02-06T01:14:56.240Z</updated>
+    <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
+    <title type="text">Jack 2</title>
+    <content type="text"/>
+    <link rel="http://schemas.google.com/contacts/2008/rel#edit-photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/d7c3474a8da0bd/MzAxNTg5MDU0NTYxNTAyND"/>
+    <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/d7c3474a8da0bd"/>
+    <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/d7c3474a8da0bd"/>
+    <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/d7c3474a8da0bd/7271189759352103"/>
+    <gd:email rel="http://schemas.google.com/g/2005#other" address="steve.bar@gmail.com" primary="true"/>
+    <gd:email rel="http://schemas.google.com/g/2005#other" address="steve.bar@yahoo.com"/>
+    <gd:phoneNumber rel="http://schemas.google.com/g/2005#mobile">2004006000</gd:phoneNumber>
+    <gd:phoneNumber rel="http://schemas.google.com/g/2005#work">2004005000</gd:phoneNumber>
+  </entry>
+</feed>

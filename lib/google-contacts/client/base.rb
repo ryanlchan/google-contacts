@@ -16,8 +16,25 @@ module GContacts
       end
 
       def all(args={})
-        response = http_request(:get, args.delete(:uri) || @uris[:all], args)
+        response = http_request(:get, @uris[:all], args)
         List.new(Nori.parse(response))
+      end
+
+      def paginate_all(args={})
+        uri = @uris[:all]
+
+        while true do
+          list = List.new(Nori.parse(http_request(:get, uri, args)))
+          list.each {|entry| yield entry}
+
+          # Nothing left to paginate
+          # Or just to be safe, we're about to get caught in an infinite loop
+          if list.empty? or list.next_uri.nil? or uri == list.next_uri
+            break
+          end
+
+          uri = list.next_uri
+        end
       end
 
       private

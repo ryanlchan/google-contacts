@@ -14,7 +14,7 @@ describe GContacts::Client::Contact do
     contacts.updated.to_s.should == "2012-04-03T01:31:38+00:00"
     contacts.title.should == "Johnny's Contacts"
     contacts.author.should == {"name" => "Johnny", "email" => "john.doe@gmail.com"}
-    contacts.next_uri.should == "/m8/feeds/contacts/john.doe%40gmail.com/full?start-index=26&max-results=25"
+    contacts.next_uri.request_uri.should == "/m8/feeds/contacts/john.doe%40gmail.com/full?start-index=26&max-results=25"
     contacts.per_page.should == 25
     contacts.start_index.should == 1
     contacts.total_results.should == 4
@@ -47,5 +47,32 @@ describe GContacts::Client::Contact do
     contact.updated.to_s.should == "2012-03-24T05:01:47+00:00"
     contact.edit_uri.should == "/m8/feeds/contacts/john.doe%40gmail.com/full/604e2ed2ae232b/9909171259275624"
     contact.data.should == {"gd:email" => [{"@rel" => "http://schemas.google.com/g/2005#other", "@address" => "jane.doe@gmail.com", "@primary" => "true"}], "gd:phoneNumber" => [{"text" => "6502004000", "@rel" => "http://schemas.google.com/g/2005#mobile"}], "gd:postalAddress" => [{"text" => "5 Market Street, San Francisco, CA", "@rel" => "http://schemas.google.com/g/2005#home"}]}
+  end
+
+  it "loads all contacts and requests more until it runs out" do
+    request_uri = ["/m8/feeds/contacts/default/full", "/m8/feeds/contacts/john.doe%40gmail.com/full?start-index=3&max-results=2", "/m8/feeds/contacts/john.doe%40gmail.com/full?start-index=5&max-results=2"]
+    3.times do |i|
+      res_mock = mock("Response#{i}")
+      res_mock.stub(:body).and_return(File.read("spec/responses/contacts/paginate_all_#{i}.xml"))
+      res_mock.stub(:code).and_return("200")
+      res_mock.stub(:message).and_return("OK")
+      res_mock.stub(:header).and_return({})
+
+      http_mock = mock("HTTP#{i}")
+      http_mock.should_receive(:verify_mode=).with(OpenSSL::SSL::VERIFY_NONE)
+      http_mock.should_receive(:start)
+      http_mock.should_receive(:request_get).with(request_uri[i], anything).and_return(res_mock)
+
+      Net::HTTP.should_receive(:new).ordered.once.and_return(http_mock)
+    end
+
+    expected_titles = ["Jack 1", "Jack 2", "Jack 3", "Jack 4", "Jack 5"]
+
+    client = GContacts::Client::Contact.new(:access_token => "12341234")
+    client.paginate_all do |entry|
+      entry.title.should == expected_titles.shift
+    end
+
+    expected_titles.should have(0).items
   end
 end
