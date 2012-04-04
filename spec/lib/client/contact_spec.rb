@@ -1,14 +1,14 @@
 require "spec_helper"
 
 describe GContacts::Client::Contact do
-  before :all do
-    @http = GContacts::HTTP::OAuth2.new(OAuth2::AccessToken.from_hash(OAuth2::Client.new("client_id", "client_secret"), :access_token => "12341234"))
-  end
+  include Support::ResponseMock
 
   it "loads all contacts" do
-    @http.should_receive(:get).with(anything, {"updated-min" => "1234"}).and_return(File.read("spec/responses/contacts/all.xml"))
+    mock_response(File.read("spec/responses/contacts/all.xml")) do |http_mock, res_mock|
+      http_mock.should_receive(:request_get).with("/m8/feeds/contacts/default/full?updated-min=1234", hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
+    end
 
-    contacts = GContacts::Client::Contact.new(@http).all(:params => {"updated-min" => "1234"})
+    contacts = GContacts::Client::Contact.new(:access_token => "12341234").all(:params => {"updated-min" => "1234"})
 
     contacts.id.should == "john.doe@gmail.com"
     contacts.updated.to_s.should == "2012-04-03T01:31:38+00:00"

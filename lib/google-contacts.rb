@@ -1,8 +1,6 @@
 require "google-contacts/version"
 require "google-contacts/exceptions"
 require "google-contacts/list"
-require "google-contacts/http/oauth2"
-require "google-contacts/http/signet"
 require "google-contacts/client/base"
 require "google-contacts/client/contact"
 require "google-contacts/element"

@@ -17,8 +17,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "nokogiri", "~>1.5.0"
   s.add_runtime_dependency "nori", "~>1.1.0"
 
-  s.add_development_dependency "oauth2", "~>0.5.0"
-  s.add_development_dependency "signet", "~>0.3.0"
   s.add_development_dependency "rspec", "~>2.8.0"
   s.add_development_dependency "guard-rspec", "~>0.6.0"
 
