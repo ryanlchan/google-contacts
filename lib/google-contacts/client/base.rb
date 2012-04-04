@@ -16,9 +16,8 @@ module GContacts
       end
 
       def all(args={})
-        results = Nori.parse(http_request(:get, args.delete(:uri) || @uris[:all], args))
-
-        List.new(results)
+        response = http_request(:get, args.delete(:uri) || @uris[:all], args)
+        List.new(Nori.parse(response))
       end
 
       private
