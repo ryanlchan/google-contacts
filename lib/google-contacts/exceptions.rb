@@ -1,5 +1,6 @@
 module GContacts
   class MissingToken < RuntimeError; end
+  class InvalidKind < RuntimeError; end
 
   class HTTPError < StandardError
     attr_reader :reply_code
@@ -9,5 +10,4 @@ module GContacts
       @reply_code = reply_code
     end
   end
-
 end
