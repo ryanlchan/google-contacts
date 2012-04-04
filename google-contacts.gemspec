@@ -1,5 +1,5 @@
-$LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
-require "google-contacts/version.rb"
+$LOAD_PATH.unshift(File.expand_path("../lib", __FILE__))
+require "google-contacts/version"
 
 Gem::Specification.new do |s|
   s.name        = "google-contacts"
@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "nori", "~>1.1.0"
 
   s.add_development_dependency "oauth2", "~>0.5.0"
+  s.add_development_dependency "signet", "~>0.3.0"
   s.add_development_dependency "rspec", "~>2.8.0"
   s.add_development_dependency "guard-rspec", "~>0.6.0"
 
