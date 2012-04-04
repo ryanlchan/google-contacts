@@ -18,9 +18,7 @@
   <openSearch:startIndex>1</openSearch:startIndex>
   <openSearch:itemsPerPage>25</openSearch:itemsPerPage>
   <entry>
-    <id>
-      http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/908f380f4c2f81
-    </id>
+    <id>http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/908f380f4c2f81</id>
     <updated>2011-07-27T00:35:14.340Z</updated>
     <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
     <title type="text">Jack</title>
@@ -30,9 +28,7 @@
     <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/908f380f4c2f81/6694635726310080"/>
   </entry>
   <entry>
-    <id>
-      http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/d7c3474a8da0bd
-    </id>
+    <id>http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/d7c3474a8da0bd</id>
     <updated>2012-02-06T01:14:56.240Z</updated>
     <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
     <title type="text">Steve Bar</title>
@@ -47,9 +43,7 @@
     <gd:phoneNumber rel="http://schemas.google.com/g/2005#work">2004005000</gd:phoneNumber>
   </entry>
   <entry>
-    <id>
-      http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/ec12328666b0d2
-    </id>
+    <id>http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/ec12328666b0d2</id>
     <updated>2011-06-29T23:11:57.345Z</updated>
     <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
     <title type="text">Joe Foo</title>
@@ -64,9 +58,7 @@
     <gd:phoneNumber rel="http://schemas.google.com/g/2005#mobile">1003004000</gd:phoneNumber>
   </entry>
   <entry>
-    <id>
-      http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/604e2ed2ae232b
-    </id>
+    <id>http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/604e2ed2ae232b</id>
     <updated>2012-03-24T05:01:47.538Z</updated>
     <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
     <title type="text">Jane Doe</title>
