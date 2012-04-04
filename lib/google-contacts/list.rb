@@ -2,16 +2,15 @@ module GContacts
   class List
     include Enumerable
 
-    attr_reader :id, :updated, :title, :author, :per_page, :start_index, :total_results, :next_uri
+    attr_reader :id, :updated, :title, :author, :per_page, :start_index, :total_results, :next_uri, :previous_uri
 
     def initialize(data)
       data = data["feed"]
 
-      type = data["category"]["@term"].split("#", 2).last
-      if type == "contact"
+      if data["entry"].is_a?(Array)
         @entries = data["entry"].map {|entry| Element.new(entry)}
       else
-        raise InvalidKind, "Google element of kind #{type} is not supported"
+        @entries = [Element.new(data["entry"])]
       end
 
       @id, @updated, @title, @author = data["id"], data["updated"], data["title"], data["author"]
@@ -20,12 +19,17 @@ module GContacts
       data["link"].each do |link|
         if link["@rel"] == "next"
           @next_uri = URI(link["@href"])
-          break
+        elsif link["@rel"] == "previous"
+          @previous_uri = URI(link["@href"])
         end
       end
     end
 
     def each; @entries.each {|e| yield e} end
     def [](index); @entries[index] end
+    def empty?; @entries.empty? end
+    def length; @entries.length end
+
+    alias size length
   end
 end
