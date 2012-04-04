@@ -1,11 +1,8 @@
 module GContacts
   class List
     include Enumerable
-    extend Forwardable
 
     attr_reader :id, :updated, :title, :author, :per_page, :start_index, :total_results, :next_uri
-
-    def_delegators :@entries, :each, :[]
 
     def initialize(data)
       data = data["feed"]
@@ -27,5 +24,8 @@ module GContacts
         end
       end
     end
+
+    def each; @entries.each {|e| yield e} end
+    def [](index); @entries[index] end
   end
 end
