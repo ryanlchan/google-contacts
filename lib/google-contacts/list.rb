@@ -22,7 +22,7 @@ module GContacts
 
       data["link"].each do |link|
         if link["@rel"] == "next"
-          @next_uri = URI(link["@href"]).request_uri
+          @next_uri = URI(link["@href"])
           break
         end
       end
