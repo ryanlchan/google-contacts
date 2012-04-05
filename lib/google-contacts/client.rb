@@ -22,7 +22,7 @@ module GContacts
     # @return [GContacts::Client]
     def initialize(args)
       unless args[:access_token]
-        raise MissingToken, "Access token must be passed"
+        raise ArgumentError, "Access token must be passed"
       end
 
       @options = {:default_type => :contacts}.merge(args)
@@ -117,9 +117,6 @@ module GContacts
       http.use_ssl = true
 
       if @options[:verify_ssl]
-        store = OpenSSL::X509::Store.new
-        store.set_default_paths
-        http.cert_store = store
         http.verify_mode = OpenSSL::SSL::VERIFY_PEER
       else
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -139,9 +136,13 @@ module GContacts
       # PUT
       elsif method == :put
         response = http.request_put(request_uri, args.delete(:body), headers)
+      else
+        raise ArgumentError, "Invalid method #{method}"
       end
 
-      unless response.code == "200"
+      if response.code == "400" or response.code == "412" or response.code == "404"
+        raise InvalidRequest.new("#{response.body} (HTTP #{response.code})")
+      elsif response.code != "200" and response.code != "201"
         raise Net::HTTPError.new("#{response.message} (#{response.code})", response)
       end
 

@@ -1,4 +1,4 @@
 module GContacts
-  class MissingToken < RuntimeError; end
   class InvalidKind < RuntimeError; end
+  class InvalidRequest < RuntimeError; end
 end
