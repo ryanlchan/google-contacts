@@ -6,7 +6,8 @@ require "cgi"
 module GContacts
   class Client
     API_URI = {
-      :contacts => {:all => URI("https://www.google.com/m8/feeds/contacts/default/full"), :create => URI("https://www.google.com/m8/feeds/contacts/default/full"), :get => "https://www.google.com/m8/feeds/contacts/default/full/%s", :update => "https://www.google.com/m8/feeds/contacts/default/full/%s", :batch => URI("https://www.google.com/m8/feeds/contacts/default/batch")}
+      :contacts => {:all => URI("https://www.google.com/m8/feeds/contacts/default/full"), :create => URI("https://www.google.com/m8/feeds/contacts/default/full"), :get => "https://www.google.com/m8/feeds/contacts/default/base/%s", :update => "https://www.google.com/m8/feeds/contacts/default/full/%s", :batch => URI("https://www.google.com/m8/feeds/contacts/default/batch")},
+      :groups => {:all => URI("https://www.google.com/m8/feeds/groups/default/full"), :create => URI("https://www.google.com/m8/feeds/groups/default/full"), :get => "https://www.google.com/m8/feeds/groups/default/base/%s", :update => "https://www.google.com/m8/feeds/groups/default/full/%s", :batch => URI("https://www.google.com/m8/feeds/groups/default/batch")}
     }
 
     ##

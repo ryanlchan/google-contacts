@@ -9,7 +9,8 @@ describe GContacts::Client do
         http_mock.should_receive(:request_get).with("/m8/feeds/contacts/default/full?updated-min=1234", hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
       end
 
-      contacts = GContacts::Client.new(:access_token => "12341234").all(:params => {"updated-min" => "1234"})
+      client = GContacts::Client.new(:access_token => "12341234")
+      contacts = client.all(:params => {"updated-min" => "1234"})
 
       contacts.id.should == "john.doe@gmail.com"
       contacts.updated.to_s.should == "2012-04-03T01:31:38+00:00"
@@ -52,7 +53,7 @@ describe GContacts::Client do
 
     it "paginates through all" do
       request_uri = ["/m8/feeds/contacts/default/full", "/m8/feeds/contacts/john.doe%40gmail.com/full?start-index=3&max-results=2", "/m8/feeds/contacts/john.doe%40gmail.com/full?start-index=5&max-results=2"]
-      3.times do |i|
+      request_uri.each_index do |i|
         res_mock = mock("Response#{i}")
         res_mock.stub(:body).and_return(File.read("spec/responses/contacts/paginate_all_#{i}.xml"))
         res_mock.stub(:code).and_return("200")
@@ -77,9 +78,9 @@ describe GContacts::Client do
       expected_titles.should have(0).items
     end
 
-    it "gets a contact" do
+    it "gets a single one" do
       mock_response(File.read("spec/responses/contacts/get.xml")) do |http_mock, res_mock|
-        http_mock.should_receive(:request_get).with("/m8/feeds/contacts/default/full/908f380f4c2f81?a=1", hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
+        http_mock.should_receive(:request_get).with("/m8/feeds/contacts/default/base/908f380f4c2f81?a=1", hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
       end
 
       client = GContacts::Client.new(:access_token => "12341234")
@@ -89,6 +90,82 @@ describe GContacts::Client do
       element.id.should == "http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/908f380f4c2f81"
       element.title.should == "Dave Pratchett"
       element.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/908f380f4c2f81/6694635726310080")
+    end
+  end
+
+  context "groups" do
+    it "loads all" do
+      mock_response(File.read("spec/responses/groups/all.xml")) do |http_mock, res_mock|
+        http_mock.should_receive(:request_get).with("/m8/feeds/groups/default/full?updated-min=1234", hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
+      end
+
+      client = GContacts::Client.new(:access_token => "12341234", :default_type => :groups)
+      groups = client.all(:params => {"updated-min" => "1234"})
+
+      groups.id.should == "john.doe@gmail.com"
+      groups.updated.to_s.should == "2012-04-05T17:32:56+00:00"
+      groups.title.should == "Johnny's Contact Groups"
+      groups.author.should == {"name" => "Johnny", "email" => "john.doe@gmail.com"}
+      groups.next_uri.should be_nil
+      groups.per_page.should == 25
+      groups.start_index.should == 1
+      groups.total_results.should == 2
+      groups.should have(2).items
+
+      group = groups.first
+      group.id.should == "http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/908f380f4c2f81"
+      group.title.should == "Family"
+      group.updated.to_s.should == "2009-08-17T20:33:20+00:00"
+      group.edit_uri.should == URI("https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/908f380f4c2f81/6694635726310080")
+      group.data.should have(0).items
+
+      group = groups[1]
+      group.id.should == "http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/d7c3474a8da0bd"
+      group.title.should == "Work"
+      group.updated.to_s.should == "2009-07-23T07:37:59+00:00"
+      group.edit_uri.should == URI("https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/d7c3474a8da0bd/7271189759352103")
+      group.data.should have(0).items
+    end
+
+    it "paginates through all" do
+      request_uri = ["/m8/feeds/groups/default/full", "/m8/feeds/groups/john.doe%40gmail.com/full?start-index=2&max-results=1"]
+      request_uri.each_index do |i|
+        res_mock = mock("Response#{i}")
+        res_mock.stub(:body).and_return(File.read("spec/responses/groups/paginate_all_#{i}.xml"))
+        res_mock.stub(:code).and_return("200")
+        res_mock.stub(:message).and_return("OK")
+        res_mock.stub(:header).and_return({})
+
+        http_mock = mock("HTTP#{i}")
+        http_mock.should_receive(:verify_mode=).with(OpenSSL::SSL::VERIFY_NONE)
+        http_mock.should_receive(:start)
+        http_mock.should_receive(:request_get).with(request_uri[i], anything).and_return(res_mock)
+
+        Net::HTTP.should_receive(:new).ordered.once.and_return(http_mock)
+      end
+
+      expected_titles = ["Family", "Work"]
+
+      client = GContacts::Client.new(:access_token => "12341234", :default_type => :groups)
+      client.paginate_all do |entry|
+        entry.title.should == expected_titles.shift
+      end
+
+      expected_titles.should have(0).items
+    end
+
+    it "gets a single one" do
+      mock_response(File.read("spec/responses/groups/get.xml")) do |http_mock, res_mock|
+        http_mock.should_receive(:request_get).with("/m8/feeds/groups/default/base/908f380f4c2f81?a=1", hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
+      end
+
+      client = GContacts::Client.new(:access_token => "12341234", :default_type => :groups)
+      element = client.get("908f380f4c2f81", :params => {:a => 1})
+
+      element.should be_a_kind_of(GContacts::Element)
+      element.id.should == "http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/d7c3474a8da0bd"
+      element.title.should == "Work"
+      element.edit_uri.should == URI("https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/d7c3474a8da0bd/7271189759352103")
     end
   end
 end
