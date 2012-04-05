@@ -1,75 +1,106 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<feed xmlns="http://www.w3.org/2005/Atom" xmlns:openSearch="http://a9.com/-/spec/opensearchrss/1.0/" xmlns:gContact="http://schemas.google.com/contact/2008" xmlns:batch="http://schemas.google.com/gdata/batch" xmlns:gd="http://schemas.google.com/g/2005">
+<feed xmlns='http://www.w3.org/2005/Atom' xmlns:openSearch='http://a9.com/-/spec/opensearch/1.1/' xmlns:gContact='http://schemas.google.com/contact/2008' xmlns:batch='http://schemas.google.com/gdata/batch' xmlns:gd='http://schemas.google.com/g/2005' gd:etag='W/&quot;M2UwZmRjYTY4MzU4YTI0YzhlYzU0.&quot;'>
   <id>john.doe@gmail.com</id>
-  <updated>2012-04-03T01:31:38.249Z</updated>
-  <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
-  <title type="text">Johnny's Contacts</title>
-  <link rel="alternate" type="text/html" href="http://www.google.com/"/>
-  <link rel="http://schemas.google.com/g/2005#feed" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full"/>
-  <link rel="http://schemas.google.com/g/2005#post" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full"/>
-  <link rel="http://schemas.google.com/g/2005#batch" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/batch"/>
-  <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full?max-results=25"/>
-  <link rel="next" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full?start-index=26&amp;max-results=25"/>
+  <updated>2012-04-05T21:46:31.537Z</updated>
+  <category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/contact/2008#contact'/>
+  <title>Johnny's Contacts</title>
+  <link rel='alternate' type='text/html' href='http://www.google.com/'/>
+  <link rel='http://schemas.google.com/g/2005#feed' type='application/atom+xml' href='https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full'/>
+  <link rel='http://schemas.google.com/g/2005#post' type='application/atom+xml' href='https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full'/>
+  <link rel='http://schemas.google.com/g/2005#batch' type='application/atom+xml' href='https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/batch'/>
+  <link rel='self' type='application/atom+xml' href='https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full?max-results=25'/>
   <author>
     <name>Johnny</name>
     <email>john.doe@gmail.com</email>
   </author>
-  <generator version="1.0" uri="http://www.google.com/m8/feeds">Contacts</generator>
+  <generator version='1.0' uri='http://www.google.com/m8/feeds'>Contacts</generator>
   <openSearch:totalResults>4</openSearch:totalResults>
   <openSearch:startIndex>1</openSearch:startIndex>
   <openSearch:itemsPerPage>25</openSearch:itemsPerPage>
-  <entry>
-    <id>http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/908f380f4c2f81</id>
-    <updated>2011-07-27T00:35:14.340Z</updated>
-    <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
-    <title type="text">Jack</title>
-    <link rel="http://schemas.google.com/contacts/2008/rel#edit-photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/908f380f4c2f81/OTYxMjM3OTMyNzc1ODAxMD"/>
-    <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/908f380f4c2f81"/>
-    <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/908f380f4c2f81"/>
-    <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/908f380f4c2f81/6694635726310080"/>
-  </entry>
-  <entry>
-    <id>http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/d7c3474a8da0bd</id>
+  <entry gd:etag='&quot;OWUxNWM4MTEzZjEyZTVjZTQ1Mjgy.&quot;'>
+    <id>http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/fd8fb1a55f2916e</id>
     <updated>2012-02-06T01:14:56.240Z</updated>
-    <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
-    <title type="text">Steve Bar</title>
-    <content type="text"/>
-    <link rel="http://schemas.google.com/contacts/2008/rel#edit-photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/d7c3474a8da0bd/MzAxNTg5MDU0NTYxNTAyND"/>
-    <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/d7c3474a8da0bd"/>
-    <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/d7c3474a8da0bd"/>
-    <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/d7c3474a8da0bd/7271189759352103"/>
-    <gd:email rel="http://schemas.google.com/g/2005#other" address="steve.bar@gmail.com" primary="true"/>
-    <gd:email rel="http://schemas.google.com/g/2005#other" address="steve.bar@yahoo.com"/>
-    <gd:phoneNumber rel="http://schemas.google.com/g/2005#mobile">2004006000</gd:phoneNumber>
-    <gd:phoneNumber rel="http://schemas.google.com/g/2005#work">2004005000</gd:phoneNumber>
+    <app:edited xmlns:app='http://www.w3.org/2007/app'>2012-02-06T01:14:56.240Z</app:edited>
+    <category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/contact/2008#contact'/>
+    <title>Steve Stephson</title>
+    <content></content>
+    <link rel='http://schemas.google.com/contacts/2008/rel#photo' type='image/*' href='https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/fd8fb1a55f2916e' gd:etag='&quot;YTkyNjVkYTFiODA3NGZmMmU4MmUy.&quot;'/>
+    <link rel='self' type='application/atom+xml' href='https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/fd8fb1a55f2916e'/>
+    <link rel='edit' type='application/atom+xml' href='https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/fd8fb1a55f2916e'/>
+    <gd:name>
+      <gd:fullName>Steve Stephson</gd:fullName>
+      <gd:givenName>Steve</gd:givenName>
+      <gd:familyName>Stephson</gd:familyName>
+    </gd:name>
+    <gd:email rel='http://schemas.google.com/g/2005#other' address='steve.stephson@gmail.com' primary='true'/>
+    <gd:email rel='http://schemas.google.com/g/2005#other' address='steve@gmail.com'/>
+    <gd:phoneNumber rel='http://schemas.google.com/g/2005#mobile'>3005004000</gd:phoneNumber>
+    <gd:phoneNumber rel='http://schemas.google.com/g/2005#work'>+130020003000</gd:phoneNumber>
+    <gContact:groupMembershipInfo deleted='false' href='http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/6'/>
   </entry>
-  <entry>
-    <id>http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/ec12328666b0d2</id>
+  <entry gd:etag='&quot;ZGRhYjVhMTNkMmFhNzJjMzEyY2Ux.&quot;'>
+    <id>http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/894bc75ebb5187d</id>
+    <updated>2011-07-01T18:08:32.555Z</updated>
+    <app:edited xmlns:app='http://www.w3.org/2007/app'>2011-07-01T18:08:32.555Z</app:edited>
+    <category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/contact/2008#contact'/>
+    <title>Jill Doe</title>
+    <link rel='http://schemas.google.com/contacts/2008/rel#photo' type='image/*' href='https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/894bc75ebb5187d' gd:etag='&quot;M2UwZmRjYTY4MzU4YTI0YzhlYzU0.&quot;'/>
+    <link rel='self' type='application/atom+xml' href='https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/894bc75ebb5187d'/>
+    <link rel='edit' type='application/atom+xml' href='https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/894bc75ebb5187d'/>
+    <gd:name>
+      <gd:fullName>Jill Doe</gd:fullName>
+      <gd:givenName>Jill</gd:givenName>
+      <gd:familyName>Doe</gd:familyName>
+    </gd:name>
+  </entry>
+  <entry gd:etag='&quot;ZWVhMDQ0MWI0MWM0YTJkM2MzY2Zh.&quot;'>
+    <id>http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/cd046ed518f0fb0</id>
     <updated>2011-06-29T23:11:57.345Z</updated>
-    <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
-    <title type="text">Joe Foo</title>
-    <link rel="http://schemas.google.com/contacts/2008/rel#edit-photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/ec12328666b0d2/MzYzODUyODM1OTI1NzQ1ND"/>
-    <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/ec12328666b0d2"/>
-    <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/ec12328666b0d2"/>
-    <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/ec12328666b0d2/2280001151204646"/>
-    <gd:organization rel="http://schemas.google.com/g/2005#work">
-      <gd:orgName>Joe's Real Estate</gd:orgName>
+    <app:edited xmlns:app='http://www.w3.org/2007/app'>2011-06-29T23:11:57.345Z</app:edited>
+    <category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/contact/2008#contact'/>
+    <title>Dave "Terry" Pratchett</title>
+    <link rel='http://schemas.google.com/contacts/2008/rel#photo' type='image/*' href='https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/cd046ed518f0fb0' gd:etag='&quot;YTkyNjVkYTFiODA3NGZmMmU4MmUy.&quot;'/>
+    <link rel='self' type='application/atom+xml' href='https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/cd046ed518f0fb0'/>
+    <link rel='edit' type='application/atom+xml' href='https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/cd046ed518f0fb0'/>
+    <gd:name>
+      <gd:fullName>Dave "Terry" Pratchett</gd:fullName>
+      <gd:givenName>Dave</gd:givenName>
+      <gd:additionalName>"Terry"</gd:additionalName>
+      <gd:familyName>Pratchett</gd:familyName>
+    </gd:name>
+    <gd:organization rel='http://schemas.google.com/g/2005#work'>
+      <gd:orgName>Foo Bar Inc</gd:orgName>
     </gd:organization>
-    <gd:email rel="http://schemas.google.com/g/2005#home" address="joe.foo@gmail.com" primary="true"/>
-    <gd:phoneNumber rel="http://schemas.google.com/g/2005#mobile">1003004000</gd:phoneNumber>
+    <gd:email rel='http://schemas.google.com/g/2005#home' address='dave.pratchett@gmail.com' primary='true'/>
+    <gd:phoneNumber rel='http://schemas.google.com/g/2005#mobile'>7003002000</gd:phoneNumber>
+    <gContact:groupMembershipInfo deleted='false' href='http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/6'/>
   </entry>
-  <entry>
-    <id>http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/604e2ed2ae232b</id>
-    <updated>2012-03-24T05:01:47.538Z</updated>
-    <category scheme="http://schemas.google.com/g/2005#kind" term="http://schemas.google.com/contact/2008#contact"/>
-    <title type="text">Jane Doe</title>
-    <content type="text"/>
-    <link rel="http://schemas.google.com/contacts/2008/rel#edit-photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/604e2ed2ae232b/NDIzOTYzMTcxMDM1MDg2ND"/>
-    <link rel="http://schemas.google.com/contacts/2008/rel#photo" type="image/*" href="https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/604e2ed2ae232b"/>
-    <link rel="self" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/604e2ed2ae232b"/>
-    <link rel="edit" type="application/atom+xml" href="https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/604e2ed2ae232b/9909171259275624"/>
-    <gd:email rel="http://schemas.google.com/g/2005#other" address="jane.doe@gmail.com" primary="true"/>
-    <gd:phoneNumber rel="http://schemas.google.com/g/2005#mobile">6502004000</gd:phoneNumber>
-    <gd:postalAddress rel="http://schemas.google.com/g/2005#home">5 Market Street, San Francisco, CA</gd:postalAddress>
+  <entry gd:etag='&quot;Yzg3MTNiODJlMTRlZjZjN2EyOGRm.&quot;'>
+    <id>http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/a1941d3d13cdc66</id>
+    <updated>2012-04-04T02:08:37.804Z</updated>
+    <app:edited xmlns:app='http://www.w3.org/2007/app'>2012-04-04T02:08:37.804Z</app:edited>
+    <category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/contact/2008#contact'/>
+    <title>Jane Doe</title>
+    <content></content>
+    <link rel='http://schemas.google.com/contacts/2008/rel#photo' type='image/*' href='https://www.google.com/m8/feeds/photos/media/john.doe%40gmail.com/a1941d3d13cdc66' gd:etag='&quot;Yzg3MTNiODJlMTRlZjZjN2EyOGRm.&quot;'/>
+    <link rel='self' type='application/atom+xml' href='https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/a1941d3d13cdc66'/>
+    <link rel='edit' type='application/atom+xml' href='https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/a1941d3d13cdc66'/>
+    <gd:name>
+      <gd:fullName>Jane Doe</gd:fullName>
+      <gd:givenName>Jane</gd:givenName>
+      <gd:familyName>Doe</gd:familyName>
+    </gd:name>
+    <gd:email rel='http://schemas.google.com/g/2005#home' address='jane.doe@gmail.com' primary='true'/>
+    <gd:phoneNumber rel='http://schemas.google.com/g/2005#mobile'>16004003000</gd:phoneNumber>
+    <gd:structuredPostalAddress rel='http://schemas.google.com/g/2005#home'>
+      <gd:formattedAddress>5 Market St
+        San Francisco
+        CA
+      </gd:formattedAddress>
+      <gd:street>5 Market St</gd:street>
+      <gd:city>San Francisco</gd:city>
+      <gd:region>CA</gd:region>
+    </gd:structuredPostalAddress>
+    <gContact:groupMembershipInfo deleted='false' href='http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/6'/>
   </entry>
 </feed>
