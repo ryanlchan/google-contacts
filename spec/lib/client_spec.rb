@@ -26,28 +26,32 @@ describe GContacts::Client do
       contact.id.should == "http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/908f380f4c2f81"
       contact.title.should == "Jack"
       contact.updated.to_s.should == "2011-07-27T00:35:14+00:00"
-      contact.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/908f380f4c2f81/6694635726310080")
+      contact.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/908f380f4c2f81")
+      contact.etag.should == "6694635726310080"
       contact.data.should have(0).items
 
       contact = contacts[1]
       contact.id.should == "http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/d7c3474a8da0bd"
       contact.title.should == "Steve Bar"
       contact.updated.to_s.should == "2012-02-06T01:14:56+00:00"
-      contact.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/d7c3474a8da0bd/7271189759352103")
+      contact.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/d7c3474a8da0bd")
+      contact.etag.should == "7271189759352103"
       contact.data.should == {"gd:email" => [{"@rel" => "http://schemas.google.com/g/2005#other", "@address" => "steve.bar@gmail.com", "@primary" => "true"}, {"@rel" => "http://schemas.google.com/g/2005#other", "@address" => "steve.bar@yahoo.com"}], "gd:phoneNumber" => [{"text" => "2004006000", "@rel" => "http://schemas.google.com/g/2005#mobile"}, {"text" => "2004005000", "@rel" => "http://schemas.google.com/g/2005#work"}]}
 
       contact = contacts[2]
       contact.id.should == "http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/ec12328666b0d2"
       contact.title.should == "Joe Foo"
       contact.updated.to_s.should == "2011-06-29T23:11:57+00:00"
-      contact.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/ec12328666b0d2/2280001151204646")
+      contact.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/ec12328666b0d2")
+      contact.etag.should == "2280001151204646"
       contact.data.should == {"gd:organization" => [{"gd:orgName" => "Joe's Real Estate", "@rel" => "http://schemas.google.com/g/2005#work"}], "gd:email" => [{"@rel" => "http://schemas.google.com/g/2005#home", "@address" => "joe.foo@gmail.com", "@primary" => "true"}], "gd:phoneNumber" => [{"text" => "1003004000", "@rel" => "http://schemas.google.com/g/2005#mobile"}]}
 
       contact = contacts[3]
       contact.id.should == "http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/604e2ed2ae232b"
       contact.title.should == "Jane Doe"
       contact.updated.to_s.should == "2012-03-24T05:01:47+00:00"
-      contact.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/604e2ed2ae232b/9909171259275624")
+      contact.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/604e2ed2ae232b")
+      contact.etag.should == "9909171259275624"
       contact.data.should == {"gd:email" => [{"@rel" => "http://schemas.google.com/g/2005#other", "@address" => "jane.doe@gmail.com", "@primary" => "true"}], "gd:phoneNumber" => [{"text" => "6502004000", "@rel" => "http://schemas.google.com/g/2005#mobile"}], "gd:postalAddress" => [{"text" => "5 Market Street, San Francisco, CA", "@rel" => "http://schemas.google.com/g/2005#home"}]}
     end
 
@@ -90,7 +94,8 @@ describe GContacts::Client do
       element.should be_a_kind_of(GContacts::Element)
       element.id.should == "http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/908f380f4c2f81"
       element.title.should == "Dave Pratchett"
-      element.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/908f380f4c2f81/6694635726310080")
+      element.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/908f380f4c2f81")
+      element.etag.should == "6694635726310080"
     end
   end
 
@@ -117,14 +122,16 @@ describe GContacts::Client do
       group.id.should == "http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/908f380f4c2f81"
       group.title.should == "Family"
       group.updated.to_s.should == "2009-08-17T20:33:20+00:00"
-      group.edit_uri.should == URI("https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/908f380f4c2f81/6694635726310080")
+      group.edit_uri.should == URI("https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/908f380f4c2f81")
+      group.etag.should == "6694635726310080"
       group.data.should have(0).items
 
       group = groups[1]
       group.id.should == "http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/d7c3474a8da0bd"
       group.title.should == "Work"
       group.updated.to_s.should == "2009-07-23T07:37:59+00:00"
-      group.edit_uri.should == URI("https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/d7c3474a8da0bd/7271189759352103")
+      group.edit_uri.should == URI("https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/d7c3474a8da0bd")
+      group.etag.should == "7271189759352103"
       group.data.should have(0).items
     end
 
@@ -167,7 +174,8 @@ describe GContacts::Client do
       element.should be_a_kind_of(GContacts::Element)
       element.id.should == "http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/d7c3474a8da0bd"
       element.title.should == "Work"
-      element.edit_uri.should == URI("https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/d7c3474a8da0bd/7271189759352103")
+      element.edit_uri.should == URI("https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/d7c3474a8da0bd")
+      element.etag.should == "7271189759352103"
     end
   end
 end

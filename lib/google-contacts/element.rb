@@ -1,6 +1,6 @@
 module GContacts
   class Element
-    attr_reader :edit_uri, :id, :title, :updated, :content, :data
+    attr_reader :edit_uri, :id, :title, :updated, :content, :data, :etag
 
     ##
     # Creates a new element by parsing the returned entry from Google
@@ -24,7 +24,8 @@ module GContacts
       # Need to know where to send the update request
       entry["link"].each do |link|
         if link["@rel"] == "edit"
-          @edit_uri = URI(link["@href"])
+          @etag = File.basename(link["@href"])
+          @edit_uri = URI(link["@href"].gsub(%r{/#{@etag}$}, ""))
           break
         end
       end
