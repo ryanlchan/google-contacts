@@ -8,6 +8,7 @@ module GContacts
     #
     def initialize(entry)
       @id, @updated, @content, @title = entry["id"], entry["updated"], entry["contact"], entry["title"]
+      @etag = entry["@gd:etag"].gsub('"', "") if entry["@gd:etag"]
       @data = {}
 
       # Parse out all the relevant data
@@ -22,33 +23,28 @@ module GContacts
       end
 
       # Need to know where to send the update request
-      entry["link"].each do |link|
-        if link["@rel"] == "edit"
-          @etag = File.basename(link["@href"])
-          @edit_uri = URI(link["@href"].gsub(%r{/#{@etag}$}, ""))
-          break
+      if entry["link"].is_a?(Array)
+        entry["link"].each do |link|
+          if link["@rel"] == "edit"
+            @edit_uri = URI(link["@href"])
+            break
+          end
         end
       end
     end
 
     ##
-    # Immediately removes the element on Google
-    def delete!
-
+    # Flags the element for creation, must be passed through {GContacts::Client#batch} for the change to take affect.
+    def create
     end
 
     ##
-    # Flags the element for deletion
+    # Flags the element for deletion, must be passed through {GContacts::Client#batch} for the change to take affect.
     def delete
     end
 
     ##
-    # Immediately updates the element on Google
-    def update!
-    end
-
-    ##
-    # Flags the element to be updated
+    # Flags the element to be updated, must be passed through {GContacts::Client#batch} for the change to take affect.
     def update
 
     end

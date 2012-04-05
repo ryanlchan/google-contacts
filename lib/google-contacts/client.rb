@@ -79,8 +79,9 @@ module GContacts
     # @option args [Symbol, Optional] :type Override which part of the API is called, can either be :contacts or :groups
     #
     # @raise [Net::HTTPError]
+    # @raise [GContacts::InvalidRequest]
     #
-    # @return [GContacts::Entry] Single entry found on
+    # @return [GContacts::Element] Single entry found on
     def get(id, args={})
       uri = URI(API_URI[args.delete(:type) || @options[:default_type]][:get] % id)
       response = Nori.parse(http_request(:get, uri, args))
@@ -90,6 +91,39 @@ module GContacts
       else
         nil
       end
+    end
+
+    ##
+    # Immediately creates the element on Google
+    # @raise [Net::HTTPError]
+    # @raise [GContacts::InvalidRequest]
+    #
+    # @return [GContacts::Element] Updated element returned from Google
+    def create!(element)
+    end
+
+    ##
+    # Immediately removes the element on Google
+    def delete!(element)
+
+    end
+
+    ##
+    # Immediately updates the element on Google
+    # @param [GContacts::Element] Element to update
+    #
+    # @raise [Net::HTTPError]
+    # @raise [GContacts::InvalidRequest]
+    #
+    # @return [GContacts::Element] Updated element returned from Google
+    def update!(element)
+    end
+
+    ##
+    # Sends an array of {GContacts::Element} to be updated/created/deleted
+    # @param [Array] list Array of elements
+    # @param [GContacts::List] list Array of elements
+    def batch_send!(list)
     end
 
     private
@@ -145,6 +179,8 @@ module GContacts
       elsif response.code != "200" and response.code != "201"
         raise Net::HTTPError.new("#{response.message} (#{response.code})", response)
       end
+
+      File.open("/tmp/data", "w+") {|f| f.write(response.body)}
 
       response.body
     end
