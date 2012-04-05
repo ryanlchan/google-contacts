@@ -2,6 +2,10 @@ module GContacts
   class Element
     attr_reader :edit_uri, :id, :title, :updated, :content, :data
 
+    ##
+    # Creates a new element by parsing the returned entry from Google
+    # @param [Hash] entry Hash representation of the XML returned from Google
+    #
     def initialize(entry)
       @id, @updated, @content, @title = entry["id"], entry["updated"], entry["contact"], entry["title"]
       @data = {}
@@ -24,6 +28,28 @@ module GContacts
           break
         end
       end
+    end
+
+    ##
+    # Immediately removes the element on Google
+    def delete!
+
+    end
+
+    ##
+    # Flags the element for deletion
+    def delete
+    end
+
+    ##
+    # Immediately updates the element on Google
+    def update!
+    end
+
+    ##
+    # Flags the element to be updated
+    def update
+
     end
 
     def inspect

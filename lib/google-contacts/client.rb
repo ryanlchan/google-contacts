@@ -13,29 +13,46 @@ module GContacts
     # Initializes a new client
     # @param [Hash] args
     # @option args [String] :access_token OAuth2 access token
-    # @option args [Symbol] :default_type Which API to call by default, can either be :contacts or :groups
+    # @option args [Symbol] :default_type Which API to call by default, can either be :contacts or :groups, defaults to :contacts
     # @option args [IO, Optional] :debug_output Dump the results of HTTP requests to the given IO
     #
+    # @raise [GContacts::MissingToken]
     #
-    # @return [GContacts::Client::Base]
+    # @return [GContacts::Client]
     def initialize(args)
+      unless args[:access_token]
+        raise MissingToken, "Access token must be passed"
+      end
+
       @options = {:default_type => :contacts}.merge(args)
     end
 
+    ##
+    # Retrieves all contacts/groups up to the default limit
+    # @param [Hash] args
+    # @option args [Hash, Optional] :params Query string arguments when sending the API request
+    # @option args [Hash, Optional] :headers Any additional headers to pass with the API request
+    # @option args [Symbol, Optional] :type Override which part of the API is called, can either be :contacts or :groups
+    #
+    # @raise [Net::HTTPError]
+    #
+    # @return [GContacts::List] List containing all the returned entries
     def all(args={})
-      unless !args[:type] or !API_URI[args[:type]]
-        raise InvalidArgument, "Unknown type"
-      end
-
       response = http_request(:get, API_URI[args.delete(:type) || @options[:default_type]][:all], args)
       List.new(Nori.parse(response))
     end
 
+    ##
+    # Repeatedly calls {#all} until all data is loaded
+    # @param [Hash] args
+    # @option args [Hash, Optional] :params Query string arguments when sending the API request
+    # @option args [Hash, Optional] :headers Any additional headers to pass with the API request
+    # @option args [Symbol, Optional] :type Override which part of the API is called, can either be :contacts or :groups
+    #
+    # @raise [Net::HTTPError]
+    #
+    # @return [GContacts::List] List containing all the returned entries
     def paginate_all(args={})
-      unless !args[:type] or !API_URI[args[:type]]
-        raise InvalidArgument, "Unknown type"
-      end
-
       uri = API_URI[args.delete(:type) || @options[:default_type]][:all]
 
       while true do
@@ -50,6 +67,21 @@ module GContacts
 
         uri = list.next_uri
       end
+    end
+
+    ##
+    # Get a single contact or group from the server
+    # @param [String] ID to update
+    # @param [Hash] args
+    # @option args [Hash, Optional] :params Query string arguments when sending the API request
+    # @option args [Hash, Optional] :headers Any additional headers to pass with the API request
+    # @option args [Symbol, Optional] :type Override which part of the API is called, can either be :contacts or :groups
+    #
+    # @raise [Net::HTTPError]
+    #
+    # @return [GContacts::Entry] Single entry found on
+    def get(id, args={})
+
     end
 
     private

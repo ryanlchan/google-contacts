@@ -4,6 +4,8 @@ module GContacts
 
     attr_reader :id, :updated, :title, :author, :per_page, :start_index, :total_results, :next_uri, :previous_uri
 
+    ##
+    # Creates a list of {GContacts::Element}s based on the given XML from Google
     def initialize(data)
       data = data["feed"]
 
