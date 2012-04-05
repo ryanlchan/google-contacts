@@ -71,7 +71,7 @@ module GContacts
 
     ##
     # Get a single contact or group from the server
-    # @param [String] ID to update
+    # @param [String] id ID to update
     # @param [Hash] args
     # @option args [Hash, Optional] :params Query string arguments when sending the API request
     # @option args [Hash, Optional] :headers Any additional headers to pass with the API request
@@ -81,7 +81,14 @@ module GContacts
     #
     # @return [GContacts::Entry] Single entry found on
     def get(id, args={})
+      uri = URI(API_URI[args.delete(:type) || @options[:default_type]][:get] % id)
+      response = Nori.parse(http_request(:get, uri, args))
 
+      if response and response["entry"]
+        Element.new(response["entry"])
+      else
+        nil
+      end
     end
 
     private
