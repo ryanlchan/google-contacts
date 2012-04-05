@@ -24,7 +24,7 @@ module GContacts
       # Need to know where to send the update request
       entry["link"].each do |link|
         if link["@rel"] == "edit"
-          @edit_uri = URI(link["@href"]).request_uri
+          @edit_uri = URI(link["@href"])
           break
         end
       end
