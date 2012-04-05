@@ -114,6 +114,7 @@ module GContacts
 
       http = Net::HTTP.new(uri.host, uri.port)
       http.set_debug_output(@options[:debug_output]) if @options[:debug_output]
+      http.use_ssl = true
 
       if @options[:verify_ssl]
         store = OpenSSL::X509::Store.new
@@ -127,20 +128,17 @@ module GContacts
       http.start
 
       query_string = build_query_string(args[:params])
+      request_uri = query_string ? "#{uri.request_uri}?#{query_string}" : uri.request_uri
 
       # GET
       if method == :get
-        if query_string
-          response = http.request_get("#{uri.request_uri}?#{query_string}", headers)
-        else
-          response = http.request_get(uri.request_uri, headers)
-        end
+        response = http.request_get(request_uri, headers)
       # POST
       elsif method == :post
-        response = http.request_post(uri.request_uri, query_string, headers)
+        response = http.request_post(request_uri, args.delete(:body), headers)
       # PUT
       elsif method == :put
-        response = http.request_put(uri.request_uri, query_string, headers)
+        response = http.request_put(request_uri, args.delete(:body), headers)
       end
 
       unless response.code == "200"

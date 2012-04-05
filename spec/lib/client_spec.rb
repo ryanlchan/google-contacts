@@ -61,6 +61,7 @@ describe GContacts::Client do
         res_mock.stub(:header).and_return({})
 
         http_mock = mock("HTTP#{i}")
+        http_mock.should_receive(:use_ssl=).with(true)
         http_mock.should_receive(:verify_mode=).with(OpenSSL::SSL::VERIFY_NONE)
         http_mock.should_receive(:start)
         http_mock.should_receive(:request_get).with(request_uri[i], anything).and_return(res_mock)
@@ -137,6 +138,7 @@ describe GContacts::Client do
         res_mock.stub(:header).and_return({})
 
         http_mock = mock("HTTP#{i}")
+        http_mock.should_receive(:use_ssl=).with(true)
         http_mock.should_receive(:verify_mode=).with(OpenSSL::SSL::VERIFY_NONE)
         http_mock.should_receive(:start)
         http_mock.should_receive(:request_get).with(request_uri[i], anything).and_return(res_mock)

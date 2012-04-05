@@ -8,6 +8,7 @@ module Support
       res_mock.stub(:header).and_return({})
 
       http_mock = mock("HTTP")
+      http_mock.should_receive(:use_ssl=).with(true)
       http_mock.should_receive(:verify_mode=).with(OpenSSL::SSL::VERIFY_NONE)
       http_mock.should_receive(:start)
 
