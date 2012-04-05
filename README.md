@@ -1,8 +1,11 @@
+Warning
+===
+This is still a work in progress. The API needs to be simplified and cleaned up and will undergo some semi-extensive changes around managing data that is returned from the API.
+
+
 Overview
 ===
 Reduces the complexity for dealing with importing and exporting using the [Google Contacts v3](https://developers.google.com/google-apps/contacts/v3/) API. Handles preserving the existing data and modifying any new data added without having to deal with it yourself. Not every API call is supported currently, but if you see one missing open a new issue. Pull requests are also welcome.
-
-This is still a work in progress and the API needs more refinement to be make it easier to manage updating XML data overall.
 
 Compability
 -
