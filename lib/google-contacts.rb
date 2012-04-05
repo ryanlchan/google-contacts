@@ -1,6 +1,5 @@
 require "google-contacts/version"
 require "google-contacts/exceptions"
 require "google-contacts/list"
-require "google-contacts/client/base"
-require "google-contacts/client/contact"
+require "google-contacts/client"
 require "google-contacts/element"
