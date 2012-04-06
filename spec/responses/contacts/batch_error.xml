@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns='http://www.w3.org/2005/Atom' xmlns:openSearch='http://a9.com/-/spec/opensearch/1.1/' xmlns:gContact='http://schemas.google.com/contact/2008' xmlns:batch='http://schemas.google.com/gdata/batch' xmlns:gd='http://schemas.google.com/g/2005'>
+  <id>https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/batch/1333746420206</id>
+  <updated>2012-04-06T21:07:00.206Z</updated>
+  <title>Batch Feed</title>
+  <entry>
+    <id>https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/batch/1333746420206/fatal</id>
+    <updated>2012-04-06T21:07:00.206Z</updated>
+    <title>Fatal Error</title>
+    <content>Feed processing was interrupted.</content>
+    <batch:interrupted reason='[Line 5, Column 35, element atom:entry] Invalid type for batch:operation: &apos;create&apos;' parsed='0' success='0' error='0' unprocessed='0'/>
+  </entry>
+</feed>

@@ -152,6 +152,66 @@ describe GContacts::Client do
 
       client.delete!(element)
     end
+
+    it "batch creates without an error" do
+      Time.any_instance.stub(:iso8601).and_return("2012-04-06T06:02:04Z")
+
+      client = GContacts::Client.new(:access_token => "12341234")
+
+      element = GContacts::Element.new
+      element.title = "foo bar"
+      element.content = "Bar Foo"
+      element.data = {"gd:name" => [{"gd:givenName" => "foo bar"}]}
+      element.category = "contact"
+      element.create
+
+      mock_response(File.read("spec/responses/contacts/batch_success.xml")) do |http_mock, res_mock|
+        http_mock.should_receive(:request_post) do |uri, data, headers|
+          uri.should == "/m8/feeds/contacts/default/full/batch"
+          headers.should include("Authorization" => "Bearer 12341234")
+
+          Nori.parse(data).should == {"feed" => {"atom:entry" => {"batch:id" => "create", "batch:operation" => {"@type" => "insert"}, "atom:category" => {"@scheme" => "http://schemas.google.com/g/2005#kind", "@term" => "http://schemas.google.com/g/2008#contact"}, "updated" => DateTime.parse("2012-04-06T06:02:04Z"), "atom:content" => "Bar Foo", "atom:title" => "foo bar", "gd:name" => {"gd:givenName" => "foo bar"}, "@xmlns:atom" => "http://www.w3.org/2005/Atom", "@xmlns:gd" => "http://schemas.google.com/g/2005"}, "@xmlns" => "http://www.w3.org/2005/Atom", "@xmlns:gContact" => "http://schemas.google.com/contact/2008", "@xmlns:gd" => "http://schemas.google.com/g/2005", "@xmlns:batch" => "http://schemas.google.com/gdata/batch"}}
+
+          res_mock
+        end
+      end
+
+      results = client.batch!([element])
+      results.should have(1).item
+      result = results.first
+      result.data.should == {"gd:name" => [{"gd:fullName" => "foo bar", "gd:givenName" => "foo bar"}]}
+      result.batch.should == {"status" => "create", "code" => "201", "reason" => "Created", "operation" => "insert"}
+    end
+
+    it "batch creates with an error" do
+      Time.any_instance.stub(:iso8601).and_return("2012-04-06T06:02:04Z")
+
+      client = GContacts::Client.new(:access_token => "12341234")
+
+      element = GContacts::Element.new
+      element.title = "foo bar"
+      element.content = "Bar Foo"
+      element.data = {"gd:name" => [{"gd:givenName" => "foo bar"}]}
+      element.category = "contact"
+      element.create
+
+      mock_response(File.read("spec/responses/contacts/batch_error.xml")) do |http_mock, res_mock|
+        http_mock.should_receive(:request_post) do |uri, data, headers|
+          uri.should == "/m8/feeds/contacts/default/full/batch"
+          headers.should include("Authorization" => "Bearer 12341234")
+
+          Nori.parse(data).should == {"feed" => {"atom:entry" => {"batch:id" => "create", "batch:operation" => {"@type" => "insert"}, "atom:category" => {"@scheme" => "http://schemas.google.com/g/2005#kind", "@term" => "http://schemas.google.com/g/2008#contact"}, "updated" => DateTime.parse("2012-04-06T06:02:04Z"), "atom:content" => "Bar Foo", "atom:title" => "foo bar", "gd:name" => {"gd:givenName" => "foo bar"}, "@xmlns:atom" => "http://www.w3.org/2005/Atom", "@xmlns:gd" => "http://schemas.google.com/g/2005"}, "@xmlns" => "http://www.w3.org/2005/Atom", "@xmlns:gContact" => "http://schemas.google.com/contact/2008", "@xmlns:gd" => "http://schemas.google.com/g/2005", "@xmlns:batch" => "http://schemas.google.com/gdata/batch"}}
+
+          res_mock
+        end
+      end
+
+      results = client.batch!([element])
+      results.should have(1).item
+      result = results.first
+      result.data.should == {}
+      result.batch.should == {"status" => {"parsed" => 0, "success" => 0, "error" => 0, "unprocessed" => 0}, "code" => "400", "reason" => "[Line 5, Column 35, element atom:entry] Invalid type for batch:operation: 'create'"}
+    end
   end
 
   context "groups" do
@@ -288,6 +348,62 @@ describe GContacts::Client do
       end
 
       client.delete!(element)
+    end
+
+    it "batch creates without an error" do
+      Time.any_instance.stub(:iso8601).and_return("2012-04-06T06:02:04Z")
+
+      client = GContacts::Client.new(:access_token => "12341234", :default_type => :groups)
+
+      element = GContacts::Element.new
+      element.title = "foo bar"
+      element.content = "Bar Foo"
+      element.category = "group"
+      element.create
+
+      mock_response(File.read("spec/responses/groups/batch_success.xml")) do |http_mock, res_mock|
+        http_mock.should_receive(:request_post) do |uri, data, headers|
+          uri.should == "/m8/feeds/groups/default/full/batch"
+          headers.should include("Authorization" => "Bearer 12341234")
+
+          Nori.parse(data).should == {"feed" => {"atom:entry" => {"batch:id" => "create", "batch:operation" => {"@type" => "insert"}, "atom:category" => {"@scheme" => "http://schemas.google.com/g/2005#kind", "@term" => "http://schemas.google.com/g/2008#group"}, "updated" => DateTime.parse("2012-04-06T06:02:04Z"), "atom:content" => "Bar Foo", "atom:title" => "foo bar", "@xmlns:atom" => "http://www.w3.org/2005/Atom", "@xmlns:gd" => "http://schemas.google.com/g/2005"}, "@xmlns" => "http://www.w3.org/2005/Atom", "@xmlns:gContact" => "http://schemas.google.com/contact/2008", "@xmlns:gd" => "http://schemas.google.com/g/2005", "@xmlns:batch" => "http://schemas.google.com/gdata/batch"}}
+
+          res_mock
+        end
+      end
+
+      results = client.batch!([element])
+      results.should have(1).item
+      result = results.first
+      result.data.should == {}
+      result.batch.should == {"status" => "create", "code" => "201", "reason" => "Created", "operation" => "insert"}
+    end
+
+    it "batch creates with an error" do
+      Time.any_instance.stub(:iso8601).and_return("2012-04-06T06:02:04Z")
+
+      client = GContacts::Client.new(:access_token => "12341234", :default_type => :groups)
+
+      element = GContacts::Element.new
+      element.category = "group"
+      element.create
+
+      mock_response(File.read("spec/responses/groups/batch_error.xml")) do |http_mock, res_mock|
+        http_mock.should_receive(:request_post) do |uri, data, headers|
+          uri.should == "/m8/feeds/groups/default/full/batch"
+          headers.should include("Authorization" => "Bearer 12341234")
+
+          Nori.parse(data).should == {"feed" => {"atom:entry" => {"batch:id" => "create", "batch:operation" => {"@type" => "insert"}, "atom:category" => {"@scheme" => "http://schemas.google.com/g/2005#kind", "@term" => "http://schemas.google.com/g/2008#group"}, "updated" => DateTime.parse("2012-04-06T06:02:04Z"), "atom:content" => {"@type" => "text"}, "atom:title" => nil, "@xmlns:atom" => "http://www.w3.org/2005/Atom", "@xmlns:gd" => "http://schemas.google.com/g/2005"}, "@xmlns" => "http://www.w3.org/2005/Atom", "@xmlns:gContact" => "http://schemas.google.com/contact/2008", "@xmlns:gd" => "http://schemas.google.com/g/2005", "@xmlns:batch" => "http://schemas.google.com/gdata/batch"}}
+
+          res_mock
+        end
+      end
+
+      results = client.batch!([element])
+      results.should have(1).item
+      result = results.first
+      result.data.should == {}
+      result.batch.should == {"status" => "create", "code" => "400", "reason" => "Entry does not have any fields set", "operation" => "insert"}
     end
   end
 end

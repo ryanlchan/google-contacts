@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns='http://www.w3.org/2005/Atom' xmlns:openSearch='http://a9.com/-/spec/opensearch/1.1/' xmlns:gContact='http://schemas.google.com/contact/2008' xmlns:batch='http://schemas.google.com/gdata/batch' xmlns:gd='http://schemas.google.com/g/2005'>
+  <id>https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/batch/1333748453804</id>
+  <updated>2012-04-06T21:40:53.805Z</updated>
+  <title>Batch Feed</title>
+  <entry>
+    <id>create</id>
+    <updated>2012-04-06T21:40:53.805Z</updated>
+    <title>Error</title>
+    <content>Entry does not have any fields set</content>
+    <batch:id>create</batch:id>
+    <batch:status code='400' reason='Entry does not have any fields set' content-type='text/plain'>Entry does not have any fields set</batch:status>
+    <batch:operation type='insert'/>
+  </entry>
+</feed>

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns='http://www.w3.org/2005/Atom' xmlns:openSearch='http://a9.com/-/spec/opensearch/1.1/' xmlns:gContact='http://schemas.google.com/contact/2008' xmlns:batch='http://schemas.google.com/gdata/batch' xmlns:gd='http://schemas.google.com/g/2005'>
+  <id>https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/batch/1333748332294</id>
+  <updated>2012-04-06T21:38:52.314Z</updated>
+  <title>Batch Feed</title>
+  <entry gd:etag='&quot;Qnc8fDVSLit7I2A9WhVQF0kMQwM.&quot;'>
+    <id>http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/1a41fba0510e183</id>
+    <updated>2012-04-06T21:38:52.303Z</updated>
+    <app:edited xmlns:app='http://www.w3.org/2007/app'>2012-04-06T21:38:52.303Z</app:edited>
+    <category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/contact/2008#group'/>
+    <title>Foo Bar</title>
+    <content>Foo Bar</content>
+    <link rel='self' type='application/atom+xml' href='https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/1a41fba0510e183'/>
+    <link rel='edit' type='application/atom+xml' href='https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/1a41fba0510e183'/>
+    <batch:id>create</batch:id>
+    <batch:status code='201' reason='Created'/>
+    <batch:operation type='insert'/>
+  </entry>
+</feed>
