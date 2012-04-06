@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Zachary Anker"]
   s.email       = ["zach.anker@gmail.com"]
   s.homepage    = "http://github.com/Placester/google-contacts"
-  s.summary     = "Google Contacts v3 library"
-  s.description = "Helps manage both the importing and exporting of Google Contacts data"
+  s.summary     = "Google Contacts (v3) library"
+  s.description = "Helps manage both the importing and exporting of Google Contacts (v3) data"
 
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "google-contacts"
