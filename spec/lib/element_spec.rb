@@ -66,6 +66,7 @@ describe GContacts::Element do
       ]
 
       elements.each do |element|
+        element.category.should == "contact"
         Nori.parse(element.to_xml).should == expected.shift
       end
 
@@ -76,11 +77,12 @@ describe GContacts::Element do
       elements = GContacts::List.new(Nori.parse(File.read("spec/responses/groups/all.xml")))
 
       expected = [
-          {"entry" => {"id" => "http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/6", "category" => {"@scheme" => "http://schemas.google.com/g/2005#kind", "@term" => "http://schemas.google.com/g/2008#"}, "updated" => DateTime.parse("2012-04-06T06:02:04Z"), "content" => {"@type" => "text"}, "title" => "System Group: My Contacts", "@gd:etag" => "YWJmYzA."}},
-          {"entry" => {"id" => "http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/ada43d293fdb9b1", "category" => {"@scheme" => "http://schemas.google.com/g/2005#kind", "@term" => "http://schemas.google.com/g/2008#"}, "updated" => DateTime.parse("2012-04-06T06:02:04Z"), "content" => {"@type" => "text"}, "title" => "Misc", "@gd:etag" => "QXc8cDVSLyt7I2A9WxNTFUkLRQQ."}}
+          {"entry" => {"id" => "http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/6", "category" => {"@scheme" => "http://schemas.google.com/g/2005#kind", "@term" => "http://schemas.google.com/g/2008#group"}, "updated" => DateTime.parse("2012-04-06T06:02:04Z"), "content" => {"@type" => "text"}, "title" => "System Group: My Contacts", "@gd:etag" => "YWJmYzA."}},
+          {"entry" => {"id" => "http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/ada43d293fdb9b1", "category" => {"@scheme" => "http://schemas.google.com/g/2005#kind", "@term" => "http://schemas.google.com/g/2008#group"}, "updated" => DateTime.parse("2012-04-06T06:02:04Z"), "content" => {"@type" => "text"}, "title" => "Misc", "@gd:etag" => "QXc8cDVSLyt7I2A9WxNTFUkLRQQ."}}
       ]
           
       elements.each do |element|
+        element.category.should == "group"
         Nori.parse(element.to_xml).should == expected.shift
       end
 

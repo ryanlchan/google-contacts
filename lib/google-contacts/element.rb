@@ -9,12 +9,13 @@ module GContacts
     #
     def initialize(entry=nil)
       return unless entry
+
       @id, @updated, @content, @title = entry["id"], entry["updated"], entry["contact"], entry["title"]
-      @category = entry["category"]["@term"].match(/contact$/i)
+      @category = entry["category"]["@term"].split("#", 2).last
       @etag = entry["@gd:etag"].gsub('"', "") if entry["@gd:etag"]
-      @data = {}
 
       # Parse out all the relevant data
+      @data = {}
       entry.each do |key, unparsed|
         next unless key =~ /^gd:/
 
