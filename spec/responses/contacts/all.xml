@@ -95,8 +95,7 @@
     <gd:structuredPostalAddress rel='http://schemas.google.com/g/2005#home'>
       <gd:formattedAddress>5 Market St
         San Francisco
-        CA
-      </gd:formattedAddress>
+        CA</gd:formattedAddress>
       <gd:street>5 Market St</gd:street>
       <gd:city>San Francisco</gd:city>
       <gd:region>CA</gd:region>

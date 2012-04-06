@@ -52,7 +52,7 @@ describe GContacts::Client do
       contact.updated.to_s.should == "2012-04-04T02:08:37+00:00"
       contact.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/a1941d3d13cdc66")
       contact.etag.should == '"Yzg3MTNiODJlMTRlZjZjN2EyOGRm."'
-      contact.data.should == {"gd:name" => [{"gd:fullName" => "Jane Doe", "gd:givenName" => "Jane", "gd:familyName" => "Doe"}], "gd:email" => [{"@rel" => "http://schemas.google.com/g/2005#home", "@address" => "jane.doe@gmail.com", "@primary" => "true"}], "gd:phoneNumber" => [{"text" => "16004003000", "@rel" => "http://schemas.google.com/g/2005#mobile"}], "gd:structuredPostalAddress" => [{"gd:formattedAddress" => "5 Market St\n        San Francisco\n        CA\n      ", "gd:street" => "5 Market St", "gd:city" => "San Francisco", "gd:region" => "CA", "@rel" => "http://schemas.google.com/g/2005#home"}]}
+      contact.data.should == {"gd:name" => [{"gd:fullName" => "Jane Doe", "gd:givenName" => "Jane", "gd:familyName" => "Doe"}], "gd:email" => [{"@rel" => "http://schemas.google.com/g/2005#home", "@address" => "jane.doe@gmail.com", "@primary" => "true"}], "gd:phoneNumber" => [{"text" => "16004003000", "@rel" => "http://schemas.google.com/g/2005#mobile"}], "gd:structuredPostalAddress" => [{"gd:formattedAddress" => "5 Market St\n        San Francisco\n        CA", "gd:street" => "5 Market St", "gd:city" => "San Francisco", "gd:region" => "CA", "@rel" => "http://schemas.google.com/g/2005#home"}]}
     end
 
     it "paginates through all" do
