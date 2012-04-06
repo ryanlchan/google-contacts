@@ -33,7 +33,7 @@ describe GContacts::Element do
       element.create
       xml = element.to_xml(true)
       xml.should =~ %r{<batch:id>create</batch:id>}
-      xml.should =~ %r{<batch:operation type='create'/>}
+      xml.should =~ %r{<batch:operation type='insert'/>}
 
       element.instance_variable_set(:@id, URI("http://google.com/a/b/c"))
       element.update

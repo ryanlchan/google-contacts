@@ -39,41 +39,29 @@ module GContacts
     ##
     # Converts the entry into XML to be sent to Google
     def to_xml(batch=false)
-      if batch
-        xml = "<entry"
-        bound = ""
-      else
-        xml = "<?xml version='1.0' encoding='UTF-8'?>\n"
-        xml << "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom' xmlns:gd='http://schemas.google.com/g/2005'"
-        bound = "atom:"
-      end
-
+      xml = "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom' xmlns:gd='http://schemas.google.com/g/2005'"
       xml << " gd:etag='#{@etag}'" if @etag
       xml << ">\n"
 
       if batch
         xml << "  <batch:id>#{@modifier_flag}</batch:id>\n"
-        xml << "  <batch:operation type='#{@modifier_flag}'/>\n"
+        xml << "  <batch:operation type='#{@modifier_flag == :create ? "insert" : @modifier_flag}'/>\n"
       end
 
       xml << "  <id>#{@id}</id>\n" unless @modifier_flag == :create
 
       unless @modifier_flag == :delete
-        xml << "  <#{bound}category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/g/2008##{@category}'/>\n"
+        xml << "  <atom:category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/g/2008##{@category}'/>\n"
         xml << "  <updated>#{Time.now.utc.iso8601}</updated>\n"
-        xml << "  <#{bound}content type='text'>#{@content}</#{bound}content>\n"
-        xml << "  <#{bound}title>#{@title}</#{bound}title>\n"
+        xml << "  <atom:content type='text'>#{@content}</atom:content>\n"
+        xml << "  <atom:title>#{@title}</atom:title>\n"
 
         @data.each do |key, parsed|
           xml << handle_data(key, parsed, 2)
         end
       end
 
-      if batch
-        xml << "</entry>\n"
-      else
-        xml << "</atom:entry>\n"
-      end
+      xml << "</atom:entry>\n"
     end
 
     ##
