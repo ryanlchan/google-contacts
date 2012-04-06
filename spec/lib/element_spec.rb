@@ -27,12 +27,32 @@ describe GContacts::Element do
       Time.any_instance.stub(:iso8601).and_return("2012-04-06T06:02:04Z")
     end
 
+    it "with batch used" do
+      element = GContacts::Element.new
+
+      element.create
+      xml = element.to_xml(true)
+      xml.should =~ %r{<batch:id>create</batch:id>}
+      xml.should =~ %r{<batch:operation type='create'/>}
+
+      element.instance_variable_set(:@id, URI("http://google.com/a/b/c"))
+      element.update
+
+      xml = element.to_xml(true)
+      xml.should =~ %r{<batch:id>update</batch:id>}
+      xml.should =~ %r{<batch:operation type='update'/>}
+
+      element.delete
+      xml = element.to_xml(true)
+      xml.should =~ %r{<batch:id>delete</batch:id>}
+      xml.should =~ %r{<batch:operation type='delete'/>}
+    end
+
     it "with deleting an entry" do
       element = GContacts::Element.new(Nori.parse(File.read("spec/responses/contacts/get.xml"))["entry"])
       element.delete
 
       Nori.parse(element.to_xml).should == {"atom:entry" => {"id" => "http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/3a203c8da7ac0a8", "@gd:etag" => '"YzllYTBkNmQwOWRlZGY1YWEyYWI5."', "@xmlns:atom"=>"http://www.w3.org/2005/Atom", "@xmlns:gd"=>"http://schemas.google.com/g/2005"}}
-      Nori.parse(element.to_xml(true)).should == {"entry" => {"batch:id" => "delete", "batch:operation" => {"@type" => "delete"}, "id" => "http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/3a203c8da7ac0a8", "@gd:etag" => '"YzllYTBkNmQwOWRlZGY1YWEyYWI5."'}}
     end
 
     it "with creating an entry" do
@@ -44,17 +64,13 @@ describe GContacts::Element do
       element.create
 
       Nori.parse(element.to_xml).should == {"atom:entry" => {"@xmlns:atom"=>"http://www.w3.org/2005/Atom", "@xmlns:gd"=>"http://schemas.google.com/g/2005", "atom:category" => {"@scheme" => "http://schemas.google.com/g/2005#kind", "@term" => "http://schemas.google.com/g/2008#contact"}, "updated" => DateTime.parse("2012-04-06T06:02:04Z"), "atom:content" => "Foo Content", "atom:title" => "Foo Title", "gd:name" => {"gd:fullName" => "John Doe", "gd:givenName" => "John", "gd:familyName" => "Doe"}}}
-
-      Nori.parse(element.to_xml(true)).should == {"entry" => {"batch:id" => "create", "batch:operation" => {"@type" => "create"}, "category" => {"@scheme" => "http://schemas.google.com/g/2005#kind", "@term" => "http://schemas.google.com/g/2008#contact"}, "updated" => DateTime.parse("2012-04-06T06:02:04Z"), "content" => "Foo Content", "title" => "Foo Title", "gd:name" => {"gd:fullName" => "John Doe", "gd:givenName" => "John", "gd:familyName" => "Doe"}}}
     end
 
-    it "updating an entry in batch" do
+    it "updating an entry" do
       element = GContacts::Element.new(Nori.parse(File.read("spec/responses/contacts/get.xml"))["entry"])
       element.update
 
       Nori.parse(element.to_xml).should == {"atom:entry" => {"id" => "http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/3a203c8da7ac0a8", "atom:category" => {"@scheme" => "http://schemas.google.com/g/2005#kind", "@term" => "http://schemas.google.com/g/2008#contact"}, "updated" => DateTime.parse("2012-04-06T06:02:04Z"), "atom:content" => {"@type" => "text"}, "atom:title" => "Casey", "gd:name" => {"gd:fullName" => "Casey", "gd:givenName" => "Casey"}, "gd:email" => {"@rel" => "http://schemas.google.com/g/2005#other", "@address" => "casey@gmail.com", "@primary" => "true"}, "@gd:etag" => '"YzllYTBkNmQwOWRlZGY1YWEyYWI5."', "@xmlns:atom"=>"http://www.w3.org/2005/Atom", "@xmlns:gd"=>"http://schemas.google.com/g/2005"}}
-
-      Nori.parse(element.to_xml(true)).should == {"entry" => {"batch:id" => "update", "batch:operation" => {"@type" => "update"}, "id" => "http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/3a203c8da7ac0a8", "category" => {"@scheme" => "http://schemas.google.com/g/2005#kind", "@term" => "http://schemas.google.com/g/2008#contact"}, "updated" => DateTime.parse("2012-04-06T06:02:04Z"), "content" => {"@type" => "text"}, "title" => "Casey", "gd:name" => {"gd:fullName" => "Casey", "gd:givenName" => "Casey"}, "gd:email" => {"@rel" => "http://schemas.google.com/g/2005#other", "@address" => "casey@gmail.com", "@primary" => "true"}, "@gd:etag" => '"YzllYTBkNmQwOWRlZGY1YWEyYWI5."'}}
     end
 
     it "with contacts" do
