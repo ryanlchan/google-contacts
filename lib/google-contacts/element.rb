@@ -1,7 +1,7 @@
 module GContacts
   class Element
     attr_accessor :title, :content, :data, :category, :etag
-    attr_reader :id, :edit_uri, :modifier_flag, :updated
+    attr_reader :id, :edit_uri, :modifier_flag, :updated, :batch
 
     ##
     # Creates a new element by parsing the returned entry from Google
@@ -12,16 +12,38 @@ module GContacts
       return unless entry
 
       @id, @updated, @content, @title, @etag = entry["id"], entry["updated"], entry["content"], entry["title"], entry["@gd:etag"]
-      @category = entry["category"]["@term"].split("#", 2).last
+      @category = entry["category"]["@term"].split("#", 2).last if entry["category"]
 
       # Parse out all the relevant data
       entry.each do |key, unparsed|
-        next unless key =~ /^gd:/
+        if key =~ /^gd:/
+          if unparsed.is_a?(Array)
+            @data[key] = unparsed.map {|v| parse_element(v)}
+          else
+            @data[key] = [parse_element(unparsed)]
+          end
+        elsif key =~ /^batch:(.+)/
+          @batch ||= {}
 
-        if unparsed.is_a?(Array)
-          @data[key] = unparsed.map {|v| parse_element(v)}
-        else
-          @data[key] = [parse_element(unparsed)]
+          if $1 == "interrupted"
+            @batch["status"] = "interrupted"
+            @batch["code"] = "400"
+            @batch["reason"] = unparsed["@reason"]
+            @batch["status"] = {"parsed" => unparsed["@parsed"].to_i, "success" => unparsed["@success"].to_i, "error" => unparsed["@error"].to_i, "unprocessed" => unparsed["@unprocessed"].to_i}
+          elsif $1 == "id"
+            @batch["status"] = unparsed
+          elsif $1 == "status"
+            if unparsed.is_a?(Hash)
+              @batch["code"] = unparsed["@code"]
+              @batch["reason"] = unparsed["@reason"]
+            else
+              @batch["code"] = unparsed.attributes["code"]
+              @batch["reason"] = unparsed.attributes["reason"]
+            end
+
+          elsif $1 == "operation"
+            @batch["operation"] = unparsed["@type"]
+          end
         end
       end
 
