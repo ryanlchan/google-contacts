@@ -1,7 +1,6 @@
 Warning
 ===
-This is still a work in progress. The API needs to be simplified and cleaned up and will undergo some semi-extensive changes around managing data that is returned from the API.
-
+This is still a work in progress. The API for handling elements and pushing the changes to Google will be getting tweaked to some extent. Shouldn't be major changes, but it will get improved and cleaned up.
 
 Overview
 ===
