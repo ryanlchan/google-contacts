@@ -15,17 +15,19 @@ module GContacts
         @entries = [Element.new(data["entry"])]
       end
 
+      if data["link"]
+        data["link"].each do |link|
+          if link["@rel"] == "next"
+            @next_uri = URI(link["@href"])
+          elsif link["@rel"] == "previous"
+            @previous_uri = URI(link["@href"])
+          end
+        end
+      end
+
       @id, @updated, @title, @author = data["id"], data["updated"], data["title"], data["author"]
       @per_page, @start_index, @total_results = data["openSearch:itemsPerPage"].to_i, data["openSearch:startIndex"].to_i, data["openSearch:totalResults"].to_i
       @category = @entries.first.category
-
-      data["link"].each do |link|
-        if link["@rel"] == "next"
-          @next_uri = URI(link["@href"])
-        elsif link["@rel"] == "previous"
-          @previous_uri = URI(link["@href"])
-        end
-      end
     end
 
     def each; @entries.each {|e| yield e} end
