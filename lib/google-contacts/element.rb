@@ -151,9 +151,9 @@ module GContacts
       end
 
       # Just a string, can add it and exit quickly
-      if data.is_a?(String)
+      if !data.is_a?(Array) and !data.is_a?(Hash)
         xml << ">"
-        xml << data
+        xml << data.to_s
         xml << "</#{tag}>\n"
         return xml
       # No other data to show, was just attributes
