@@ -106,7 +106,7 @@ describe GContacts::Client do
       element.data = {"gd:name" => {"gd:fullName" => "Foo Bar", "gd:givenName" => "Foo Bar"}, "gd:email" => {"@rel" => "http://schemas.google.com/g/2005#other", "@address" => "casey@gmail.com", "@primary" => true}}
 
       mock_response(File.read("spec/responses/contacts/create.xml")) do |http_mock, res_mock|
-        http_mock.should_receive(:request_post).with("/m8/feeds/contacts/default/full", element.to_xml, hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
+        http_mock.should_receive(:request_post).with("/m8/feeds/contacts/default/full", "<?xml version='1.0' encoding='UTF-8'?>\n#{element.to_xml}", hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
       end
 
       created = client.create!(element)
@@ -124,7 +124,7 @@ describe GContacts::Client do
       element.title.should == 'Foo "Doe" Bar'
 
       mock_response(File.read("spec/responses/contacts/update.xml")) do |http_mock, res_mock|
-        http_mock.should_receive(:request_put).with("/m8/feeds/contacts/default/base/32c39d7106a538e", element.to_xml, hash_including("Authorization" => "Bearer 12341234", "If-Match" => element.etag)).and_return(res_mock)
+        http_mock.should_receive(:request_put).with("/m8/feeds/contacts/default/base/32c39d7106a538e", "<?xml version='1.0' encoding='UTF-8'?>\n#{element.to_xml}", hash_including("Authorization" => "Bearer 12341234", "If-Match" => element.etag)).and_return(res_mock)
       end
 
       updated = client.update!(element)
@@ -242,7 +242,7 @@ describe GContacts::Client do
       element.content = "Foo Bar"
 
       mock_response(File.read("spec/responses/groups/create.xml")) do |http_mock, res_mock|
-        http_mock.should_receive(:request_post).with("/m8/feeds/groups/default/full", element.to_xml, hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
+        http_mock.should_receive(:request_post).with("/m8/feeds/groups/default/full", "<?xml version='1.0' encoding='UTF-8'?>\n#{element.to_xml}", hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
       end
 
       created = client.create!(element)
@@ -261,7 +261,7 @@ describe GContacts::Client do
       element.content.should == "Bar Bar"
 
       mock_response(File.read("spec/responses/groups/update.xml")) do |http_mock, res_mock|
-        http_mock.should_receive(:request_put).with("/m8/feeds/groups/default/base/3f93e3738e811d63", element.to_xml, hash_including("Authorization" => "Bearer 12341234", "If-Match" => element.etag)).and_return(res_mock)
+        http_mock.should_receive(:request_put).with("/m8/feeds/groups/default/base/3f93e3738e811d63", "<?xml version='1.0' encoding='UTF-8'?>\n#{element.to_xml}", hash_including("Authorization" => "Bearer 12341234", "If-Match" => element.etag)).and_return(res_mock)
       end
 
       updated = client.update!(element)
