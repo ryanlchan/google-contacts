@@ -1,10 +1,10 @@
 Warning
 ===
-This is still a work in progress. The API for handling elements and pushing the changes to Google will be getting tweaked to some extent. Shouldn't be major changes, but it will get improved and cleaned up.
+This is still a work in progress. The API for modifying elements will be cleaned up to remove the need for hackish data management for updating elements, everything else should be final.
 
 Overview
 ===
-Reduces the complexity for dealing with importing and exporting using the [Google Contacts v3](https://developers.google.com/google-apps/contacts/v3/) API. Handles preserving the existing data and modifying any new data added without having to deal with it yourself. Not every API call is supported currently, but if you see one missing open a new issue. Pull requests are also welcome.
+Reduces the complexity for dealing with importing and exporting using the [Google Contacts v3](https://developers.google.com/google-apps/contacts/v3/) API. Handles preserving the existing data and modifying any new data added without having to deal with it yourself. Supports all of the API calls except for photo management.
 
 Compability
 -
