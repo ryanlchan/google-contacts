@@ -40,7 +40,7 @@ module GContacts
     # @return [GContacts::List] List containing all the returned entries
     def all(args={})
       response = http_request(:get, API_URI[args.delete(:type) || @options[:default_type]][:all], args)
-      List.new(Nori.parse(response))
+      List.new(Nori.parse(response, :nokogiri))
     end
 
     ##
@@ -57,7 +57,7 @@ module GContacts
       uri = API_URI[args.delete(:type) || @options[:default_type]][:all]
 
       while true do
-        list = List.new(Nori.parse(http_request(:get, uri, args)))
+        list = List.new(Nori.parse(http_request(:get, uri, args), :nokogiri))
         list.each {|entry| yield entry}
 
         # Nothing left to paginate
@@ -84,7 +84,7 @@ module GContacts
     # @return [GContacts::Element] Single entry found on
     def get(id, args={})
       uri = URI(API_URI[args.delete(:type) || @options[:default_type]][:get] % id)
-      response = Nori.parse(http_request(:get, uri, args))
+      response = Nori.parse(http_request(:get, uri, args), :nokogiri)
 
       if response and response["entry"]
         Element.new(response["entry"])
