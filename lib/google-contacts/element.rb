@@ -1,7 +1,7 @@
 module GContacts
   class Element
-    attr_accessor :title, :content, :data, :category
-    attr_reader :id, :edit_uri, :modifier_flag, :updated, :etag
+    attr_accessor :title, :content, :data, :category, :etag
+    attr_reader :id, :edit_uri, :modifier_flag, :updated
 
     ##
     # Creates a new element by parsing the returned entry from Google
@@ -10,9 +10,8 @@ module GContacts
     def initialize(entry=nil)
       return unless entry
 
-      @id, @updated, @content, @title = entry["id"], entry["updated"], entry["contact"], entry["title"]
+      @id, @updated, @content, @title, @etag = entry["id"], entry["updated"], entry["contact"], entry["title"], entry["@gd:etag"]
       @category = entry["category"]["@term"].split("#", 2).last
-      @etag = entry["@gd:etag"].gsub('"', "") if entry["@gd:etag"]
 
       # Parse out all the relevant data
       @data = {}
@@ -41,7 +40,13 @@ module GContacts
     # Converts the entry into XML to be sent to Google
     def to_xml(batch=false)
       xml = batch ? "" : "<?xml version='1.0' encoding='UTF-8'?>\n"
-      xml << "<entry"
+
+      if batch
+        xml << "<entry"
+      else
+        xml << "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom' xmlns:gd='http://schemas.google.com/g/2005'"
+      end
+
       xml << " gd:etag='#{@etag}'" if @etag
       xml << ">\n"
 
@@ -63,13 +68,17 @@ module GContacts
         end
       end
 
-      xml << "</entry>\n"
+      if batch
+        xml << "</entry>\n"
+      else
+        xml << "</atom:entry>\n"
+      end
     end
 
     ##
     # Flags the element for creation, must be passed through {GContacts::Client#batch} for the change to take affect.
     def create;
-      unless @edit_uri
+      unless @id
         @modifier_flag = :create
       end
     end
@@ -77,7 +86,7 @@ module GContacts
     ##
     # Flags the element for deletion, must be passed through {GContacts::Client#batch} for the change to take affect.
     def delete;
-      if @edit_uri
+      if @id
         @modifier_flag = :delete
       else
         @modifier_flag = nil
@@ -87,7 +96,7 @@ module GContacts
     ##
     # Flags the element to be updated, must be passed through {GContacts::Client#batch} for the change to take affect.
     def update;
-      if @edit_uri
+      if @id
         @modifier_flag = :update
       end
     end
