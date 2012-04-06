@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<entry xmlns='http://www.w3.org/2005/Atom' xmlns:gContact='http://schemas.google.com/contact/2008' xmlns:batch='http://schemas.google.com/gdata/batch' xmlns:gd='http://schemas.google.com/g/2005' gd:etag='&quot;ZDE2ZjBmYzk4ZTAwMTRjODUzYTg2.&quot;'>
+  <id>http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/005d057b3b3d42a</id>
+  <updated>2012-04-06T19:57:29.810Z</updated>
+  <app:edited xmlns:app='http://www.w3.org/2007/app'>2012-04-06T19:57:29.810Z</app:edited>
+  <category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/contact/2008#group'/>
+  <title>Foo Bar</title>
+  <content>Foo Bar</content>
+  <link rel='self' type='application/atom+xml' href='https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/005d057b3b3d42a'/>
+  <link rel='edit' type='application/atom+xml' href='https://www.google.com/m8/feeds/groups/john.doe%40gmail.com/full/005d057b3b3d42a'/>
+</entry>

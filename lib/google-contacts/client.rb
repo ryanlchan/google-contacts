@@ -95,17 +95,23 @@ module GContacts
 
     ##
     # Immediately creates the element on Google
+    #
     # @raise [Net::HTTPError]
     # @raise [GContacts::InvalidRequest]
+    # @raise [GContacts::InvalidResponse]
+    # @raise [GContacts::InvalidKind]
     #
     # @return [GContacts::Element] Updated element returned from Google
     def create!(element)
-    end
+      uri = API_URI["#{element.category}s".to_sym]
+      raise InvalidKind, "Unsupported kind #{element.category}" unless uri
 
-    ##
-    # Immediately removes the element on Google
-    def delete!(element)
+      data = Nori.parse(http_request(:post, uri[:create], :body => element.to_xml, :headers => {"Content-Type" => "application/atom+xml"}), :nokogiri)
+      unless data["entry"]
+        raise InvalidResponse, "Created but response wasn't a valid element"
+      end
 
+      Element.new(data["entry"])
     end
 
     ##
@@ -113,16 +119,49 @@ module GContacts
     # @param [GContacts::Element] Element to update
     #
     # @raise [Net::HTTPError]
+    # @raise [GContacts::InvalidResponse]
     # @raise [GContacts::InvalidRequest]
+    # @raise [GContacts::InvalidKind]
     #
     # @return [GContacts::Element] Updated element returned from Google
     def update!(element)
+      uri = API_URI["#{element.category}s".to_sym]
+      raise InvalidKind, "Unsupported kind #{element.category}" unless uri
+
+      data = Nori.parse(http_request(:put, URI(uri[:get] % File.basename(element.id)), :body => element.to_xml, :headers => {"Content-Type" => "application/atom+xml", "If-Match" => element.etag}), :nokogiri)
+      unless data["entry"]
+        raise InvalidResponse, "Updated but response wasn't a valid element"
+      end
+
+      Element.new(data["entry"])
+    end
+
+    ##
+    # Immediately removes the element on Google
+    # @param [GContacts::Element] Element to delete
+    #
+    # @raise [Net::HTTPError]
+    # @raise [GContacts::InvalidRequest]
+    #
+    def delete!(element)
+      uri = API_URI["#{element.category}s".to_sym]
+      raise InvalidKind, "Unsupported kind #{element.category}" unless uri
+
+      http_request(:delete, URI(uri[:get] % File.basename(element.id)), :headers => {"Content-Type" => "application/atom+xml", "If-Match" => element.etag})
+
+      true
     end
 
     ##
     # Sends an array of {GContacts::Element} to be updated/created/deleted
     # @param [Array] list Array of elements
     # @param [GContacts::List] list Array of elements
+    #
+    # @raise [Net::HTTPError]
+    # @raise [GContacts::InvalidResponse]
+    # @raise [GContacts::InvalidRequest]
+    # @raise [GContacts::InvalidKind]
+    #
     def batch_send!(list)
     end
 
@@ -170,6 +209,9 @@ module GContacts
       # PUT
       elsif method == :put
         response = http.request_put(request_uri, args.delete(:body), headers)
+      # DELETE
+      elsif method == :delete
+        response = http.request(Net::HTTP::Delete.new(request_uri, headers))
       else
         raise ArgumentError, "Invalid method #{method}"
       end
@@ -179,8 +221,6 @@ module GContacts
       elsif response.code != "200" and response.code != "201"
         raise Net::HTTPError.new("#{response.message} (#{response.code})", response)
       end
-
-      File.open("/tmp/data", "w+") {|f| f.write(response.body)}
 
       response.body
     end
