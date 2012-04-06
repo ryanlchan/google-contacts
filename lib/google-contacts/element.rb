@@ -121,18 +121,16 @@ module GContacts
       xml << "<" << tag
 
       # Need to check for any additional attributes to attach since they can be mixed ni
+      misc_keys = data.length
       if data.is_a?(Hash)
-        data.delete_if do |key, value|
-          if key =~ /^@(.+)/
-            xml << " #{$1}='#{value}'"
-            true
-          else
-            false
-          end
+        data.each do |key, value|
+          next unless key =~ /^@(.+)/
+          xml << " #{$1}='#{value}'"
+          misc_keys-= 1
         end
 
         # We explicitly converted the Nori::StringWithAttributes to a hash
-        if data["text"] and data.length == 1
+        if data["text"] and misc_keys == 1
           data = data["text"]
         end
 
@@ -148,7 +146,7 @@ module GContacts
         xml << "</#{tag}>\n"
         return xml
       # No other data to show, was just attributes
-      elsif data.empty?
+      elsif misc_keys == 0
         xml << "/>\n"
         return xml
       end
@@ -157,6 +155,7 @@ module GContacts
       xml << ">\n"
 
       data.each do |key, value|
+        next if key =~ /^@/
         xml << handle_data(key, value, indent + 2)
       end
 
