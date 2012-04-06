@@ -2,7 +2,7 @@ module GContacts
   class List
     include Enumerable
 
-    attr_reader :id, :updated, :title, :author, :per_page, :start_index, :total_results, :next_uri, :previous_uri
+    attr_reader :id, :updated, :title, :author, :per_page, :start_index, :total_results, :next_uri, :previous_uri, :category
 
     ##
     # Creates a list of {GContacts::Element}s based on the given XML from Google
@@ -17,6 +17,7 @@ module GContacts
 
       @id, @updated, @title, @author = data["id"], data["updated"], data["title"], data["author"]
       @per_page, @start_index, @total_results = data["openSearch:itemsPerPage"].to_i, data["openSearch:startIndex"].to_i, data["openSearch:totalResults"].to_i
+      @category = @entries.first.category
 
       data["link"].each do |link|
         if link["@rel"] == "next"
