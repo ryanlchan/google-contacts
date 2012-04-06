@@ -11,7 +11,7 @@ module GContacts
       @data = {}
       return unless entry
 
-      @id, @updated, @content, @title, @etag = entry["id"], entry["updated"], entry["contact"], entry["title"], entry["@gd:etag"]
+      @id, @updated, @content, @title, @etag = entry["id"], entry["updated"], entry["content"], entry["title"], entry["@gd:etag"]
       @category = entry["category"]["@term"].split("#", 2).last
 
       # Parse out all the relevant data
@@ -39,12 +39,13 @@ module GContacts
     ##
     # Converts the entry into XML to be sent to Google
     def to_xml(batch=false)
-      xml = batch ? "" : "<?xml version='1.0' encoding='UTF-8'?>\n"
-
       if batch
-        xml << "<entry"
+        xml = "<entry"
+        bound = ""
       else
+        xml = "<?xml version='1.0' encoding='UTF-8'?>\n"
         xml << "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom' xmlns:gd='http://schemas.google.com/g/2005'"
+        bound = "atom:"
       end
 
       xml << " gd:etag='#{@etag}'" if @etag
@@ -58,10 +59,10 @@ module GContacts
       xml << "  <id>#{@id}</id>\n" unless @modifier_flag == :create
 
       unless @modifier_flag == :delete
-        xml << "  <category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/g/2008##{@category}'/>\n"
+        xml << "  <#{bound}category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/g/2008##{@category}'/>\n"
         xml << "  <updated>#{Time.now.utc.iso8601}</updated>\n"
-        xml << "  <content type='text'>#{@content}</content>\n"
-        xml << "  <title>#{@title}</title>\n"
+        xml << "  <#{bound}content type='text'>#{@content}</#{bound}content>\n"
+        xml << "  <#{bound}title>#{@title}</#{bound}title>\n"
 
         @data.each do |key, parsed|
           xml << handle_data(key, parsed, 2)
