@@ -8,13 +8,13 @@ module GContacts
     # @param [Hash, Optional] entry Hash representation of the XML returned from Google
     #
     def initialize(entry=nil)
+      @data = {}
       return unless entry
 
       @id, @updated, @content, @title, @etag = entry["id"], entry["updated"], entry["contact"], entry["title"], entry["@gd:etag"]
       @category = entry["category"]["@term"].split("#", 2).last
 
       # Parse out all the relevant data
-      @data = {}
       entry.each do |key, unparsed|
         next unless key =~ /^gd:/
 
