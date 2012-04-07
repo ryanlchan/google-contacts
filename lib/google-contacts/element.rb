@@ -141,13 +141,15 @@ module GContacts
       xml = " " * indent
       xml << "<" << tag
 
-      # Need to check for any additional attributes to attach since they can be mixed ni
-      misc_keys = data.length
+      # Need to check for any additional attributes to attach since they can be mixed in
+      misc_keys = 0
       if data.is_a?(Hash)
+        misc_keys = data.length
+
         data.each do |key, value|
           next unless key =~ /^@(.+)/
           xml << " #{$1}='#{value}'"
-          misc_keys-= 1
+          misc_keys -= 1
         end
 
         # We explicitly converted the Nori::StringWithAttributes to a hash
