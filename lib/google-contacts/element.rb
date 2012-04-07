@@ -70,7 +70,10 @@ module GContacts
         xml << "  <batch:operation type='#{@modifier_flag == :create ? "insert" : @modifier_flag}'/>\n"
       end
 
-      xml << "  <id>#{@id}</id>\n" unless @modifier_flag == :create
+      # While /base/ is whats returned, /full/ is what it seems to actually want
+      if @id
+        xml << "  <id>#{@id.to_s.gsub("/base/", "/full/")}</id>\n"
+      end
 
       unless @modifier_flag == :delete
         xml << "  <atom:category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/g/2008##{@category}'/>\n"
