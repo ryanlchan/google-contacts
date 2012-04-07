@@ -243,6 +243,8 @@ module GContacts
 
       if response.code == "400" or response.code == "412" or response.code == "404"
         raise InvalidRequest.new("#{response.body} (HTTP #{response.code})")
+      elsif response.code == "401"
+        raise Unauthorized.new(response.message)
       elsif response.code != "200" and response.code != "201"
         raise Net::HTTPError.new("#{response.message} (#{response.code})", response)
       end
