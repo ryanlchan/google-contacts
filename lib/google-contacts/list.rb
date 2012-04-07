@@ -16,7 +16,7 @@ module GContacts
 
       if data["entry"].is_a?(Array)
         @entries = data["entry"].map {|entry| Element.new(entry)}
-      else
+      elsif data["entry"]
         @entries = [Element.new(data["entry"])]
       end
 
