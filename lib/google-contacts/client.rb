@@ -73,6 +73,9 @@ module GContacts
         end
 
         uri = list.next_uri
+
+        # If we have any params remove them, the URI Google returns will include them
+        args.delete(:params)
       end
     end
 
