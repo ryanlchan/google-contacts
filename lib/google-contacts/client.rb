@@ -6,8 +6,8 @@ require "cgi"
 module GContacts
   class Client
     API_URI = {
-      :contacts => {:all => URI("https://www.google.com/m8/feeds/contacts/default/full"), :create => URI("https://www.google.com/m8/feeds/contacts/default/full"), :get => "https://www.google.com/m8/feeds/contacts/default/base/%s", :update => "https://www.google.com/m8/feeds/contacts/default/full/%s", :batch => URI("https://www.google.com/m8/feeds/contacts/default/full/batch")},
-      :groups => {:all => URI("https://www.google.com/m8/feeds/groups/default/full"), :create => URI("https://www.google.com/m8/feeds/groups/default/full"), :get => "https://www.google.com/m8/feeds/groups/default/base/%s", :update => "https://www.google.com/m8/feeds/groups/default/full/%s", :batch => URI("https://www.google.com/m8/feeds/groups/default/full/batch")}
+      :contacts => {:all => "https://www.google.com/m8/feeds/contacts/default/%s", :create => URI("https://www.google.com/m8/feeds/contacts/default/full"), :get => "https://www.google.com/m8/feeds/contacts/default/%s/%s", :update => "https://www.google.com/m8/feeds/contacts/default/full/%s", :batch => URI("https://www.google.com/m8/feeds/contacts/default/full/batch")},
+      :groups => {:all => "https://www.google.com/m8/feeds/groups/default/%s", :create => URI("https://www.google.com/m8/feeds/groups/default/full"), :get => "https://www.google.com/m8/feeds/groups/default/%s/%s", :update => "https://www.google.com/m8/feeds/groups/default/full/%s", :batch => URI("https://www.google.com/m8/feeds/groups/default/full/batch")}
     }
 
     ##
@@ -33,16 +33,16 @@ module GContacts
     # @param [Hash] args
     # @option args [Hash, Optional] :params Query string arguments when sending the API request
     # @option args [Hash, Optional] :headers Any additional headers to pass with the API request
-    # @option args [Symbol, Optional] :type Override which part of the API is called, can either be :contacts or :groups
+    # @option args [Symbol, Optional] :api_type Override which part of the API is called, can either be :contacts or :groups
     #
     # @raise [Net::HTTPError]
     #
     # @return [GContacts::List] List containing all the returned entries
     def all(args={})
-      uri = API_URI[args.delete(:type) || @options[:default_type]]
+      uri = API_URI[args.delete(:api_type) || @options[:default_type]]
       raise ArgumentError, "Unsupported type given" unless uri
 
-      response = http_request(:get, uri[:all], args)
+      response = http_request(:get, URI(uri[:all] % (args.delete(:type) || :full)), args)
       List.new(Nori.parse(response, :nokogiri))
     end
 
@@ -51,15 +51,16 @@ module GContacts
     # @param [Hash] args
     # @option args [Hash, Optional] :params Query string arguments when sending the API request
     # @option args [Hash, Optional] :headers Any additional headers to pass with the API request
-    # @option args [Symbol, Optional] :type Override which part of the API is called, can either be :contacts or :groups
+    # @option args [Symbol, Optional] :api_type Override which part of the API is called, can either be :contacts or :groups
+    # @option args [Symbol, Optional] :type What data type to request, can either be :full or :base, defaults to :base
     #
     # @raise [Net::HTTPError]
     #
     # @return [GContacts::List] List containing all the returned entries
     def paginate_all(args={})
-      uri = API_URI[args.delete(:type) || @options[:default_type]]
+      uri = API_URI[args.delete(:api_type) || @options[:default_type]]
       raise ArgumentError, "Unsupported type given" unless uri
-      uri = uri[:all]
+      uri = URI(uri[:all] % (args.delete(:type) || :full))
 
       while true do
         list = List.new(Nori.parse(http_request(:get, uri, args), :nokogiri))
@@ -81,17 +82,18 @@ module GContacts
     # @param [Hash] args
     # @option args [Hash, Optional] :params Query string arguments when sending the API request
     # @option args [Hash, Optional] :headers Any additional headers to pass with the API request
-    # @option args [Symbol, Optional] :type Override which part of the API is called, can either be :contacts or :groups
+    # @option args [Symbol, Optional] :api_type Override which part of the API is called, can either be :contacts or :groups
+    # @option args [Symbol, Optional] :type What data type to request, can either be :full or :base, defaults to :base
     #
     # @raise [Net::HTTPError]
     # @raise [GContacts::InvalidRequest]
     #
     # @return [GContacts::Element] Single entry found on
     def get(id, args={})
-      uri = API_URI[args.delete(:type) || @options[:default_type]]
+      uri = API_URI[args.delete(:api_type) || @options[:default_type]]
       raise ArgumentError, "Unsupported type given" unless uri
 
-      response = Nori.parse(http_request(:get, URI(uri[:get] % id), args), :nokogiri)
+      response = Nori.parse(http_request(:get, URI(uri[:get] % [args.delete(:type) || :full, id]), args), :nokogiri)
 
       if response and response["entry"]
         Element.new(response["entry"])
@@ -139,7 +141,7 @@ module GContacts
 
       xml = "<?xml version='1.0' encoding='UTF-8'?>\n#{element.to_xml}"
 
-      data = Nori.parse(http_request(:put, URI(uri[:get] % File.basename(element.id)), :body => xml, :headers => {"Content-Type" => "application/atom+xml", "If-Match" => element.etag}), :nokogiri)
+      data = Nori.parse(http_request(:put, URI(uri[:get] % [:base, File.basename(element.id)]), :body => xml, :headers => {"Content-Type" => "application/atom+xml", "If-Match" => element.etag}), :nokogiri)
       unless data["entry"]
         raise InvalidResponse, "Updated but response wasn't a valid element"
       end
@@ -158,7 +160,7 @@ module GContacts
       uri = API_URI["#{element.category}s".to_sym]
       raise InvalidKind, "Unsupported kind #{element.category}" unless uri
 
-      http_request(:delete, URI(uri[:get] % File.basename(element.id)), :headers => {"Content-Type" => "application/atom+xml", "If-Match" => element.etag})
+      http_request(:delete, URI(uri[:get] % [:base, File.basename(element.id)]), :headers => {"Content-Type" => "application/atom+xml", "If-Match" => element.etag})
 
       true
     end
@@ -167,6 +169,10 @@ module GContacts
     # Sends an array of {GContacts::Element} to be updated/created/deleted
     # @param [Array] list Array of elements
     # @param [GContacts::List] list Array of elements
+    # @param [Hash] args
+    # @option args [Hash, Optional] :params Query string arguments when sending the API request
+    # @option args [Hash, Optional] :headers Any additional headers to pass with the API request
+    # @option args [Symbol, Optional] :api_type Override which part of the API is called, can either be :contacts or :groups
     #
     # @raise [Net::HTTPError]
     # @raise [GContacts::InvalidResponse]
@@ -177,7 +183,7 @@ module GContacts
     def batch!(list, args={})
       return List.new if list.empty?
 
-      uri = API_URI[args.delete(:type) || @options[:default_type]]
+      uri = API_URI[args.delete(:api_type) || @options[:default_type]]
       raise ArgumentError, "Unsupported type given" unless uri
 
       xml = "<?xml version='1.0' encoding='UTF-8'?>\n"

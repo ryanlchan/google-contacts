@@ -85,7 +85,7 @@ describe GContacts::Client do
 
     it "gets a single one" do
       mock_response(File.read("spec/responses/contacts/get.xml")) do |http_mock, res_mock|
-        http_mock.should_receive(:request_get).with("/m8/feeds/contacts/default/base/908f380f4c2f81?a=1", hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
+        http_mock.should_receive(:request_get).with("/m8/feeds/contacts/default/full/908f380f4c2f81?a=1", hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
       end
 
       client = GContacts::Client.new(:access_token => "12341234")
@@ -280,7 +280,7 @@ describe GContacts::Client do
 
     it "gets a single one" do
       mock_response(File.read("spec/responses/groups/get.xml")) do |http_mock, res_mock|
-        http_mock.should_receive(:request_get).with("/m8/feeds/groups/default/base/908f380f4c2f81?a=1", hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
+        http_mock.should_receive(:request_get).with("/m8/feeds/groups/default/full/908f380f4c2f81?a=1", hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
       end
 
       client = GContacts::Client.new(:access_token => "12341234", :default_type => :groups)
