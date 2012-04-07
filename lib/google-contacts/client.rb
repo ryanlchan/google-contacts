@@ -175,7 +175,8 @@ module GContacts
     #
     # @return [GContacts::List] List of elements with the results from the server
     def batch!(list, args={})
-      raise ArgumentError, "List cannot be empty" if list.empty?
+      return List.new if list.empty?
+
       uri = API_URI[args.delete(:type) || @options[:default_type]]
       raise ArgumentError, "Unsupported type given" unless uri
 

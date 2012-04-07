@@ -6,7 +6,12 @@ module GContacts
 
     ##
     # Creates a list of {GContacts::Element}s based on the given XML from Google
-    def initialize(data)
+    def initialize(data=nil)
+      unless data
+        @entries = []
+        return
+      end
+
       data = data["feed"]
 
       if data["entry"].is_a?(Array)
