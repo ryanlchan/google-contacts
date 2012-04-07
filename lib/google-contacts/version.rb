@@ -1,3 +1,3 @@
 module GContacts
-  VERSION = "2.0.3"
+  VERSION = "0.0.1"
 end
