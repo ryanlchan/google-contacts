@@ -1,6 +1,6 @@
 module GContacts
   class Element
-    attr_accessor :title, :content, :data, :category, :etag
+    attr_accessor :title, :content, :data, :category, :etag, :category_tag
     attr_reader :id, :edit_uri, :modifier_flag, :updated, :batch
 
     ##
@@ -12,7 +12,10 @@ module GContacts
       return unless entry
 
       @id, @updated, @content, @title, @etag = entry["id"], entry["updated"], entry["content"], entry["title"], entry["@gd:etag"]
-      @category = entry["category"]["@term"].split("#", 2).last if entry["category"]
+      if entry["category"]
+        @category = entry["category"]["@term"].split("#", 2).last
+        @category_tag = entry["category"]["@label"] if entry["category"]["@label"]
+      end
 
       # Parse out all the relevant data
       entry.each do |key, unparsed|
@@ -76,7 +79,9 @@ module GContacts
       end
 
       unless @modifier_flag == :delete
-        xml << "  <atom:category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/g/2008##{@category}'/>\n"
+        xml << "  <atom:category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/g/2008##{@category}'"
+        xml << " label='#{@category_tag}'" if @category_tag
+        xml << "/>\n"
         xml << "  <updated>#{Time.now.utc.iso8601}</updated>\n"
         xml << "  <atom:content type='text'>#{@content}</atom:content>\n"
         xml << "  <atom:title>#{@title}</atom:title>\n"
