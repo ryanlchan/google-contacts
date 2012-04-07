@@ -88,7 +88,7 @@ module GContacts
         xml << "  <updated>#{Time.now.utc.iso8601}</updated>\n"
         xml << "  <atom:content type='text'>#{@content}</atom:content>\n"
         xml << "  <atom:title>#{@title}</atom:title>\n"
-        xml << "  <gContact:groupMembershipInfo deleted='false' href='#{@group_id}'/>" if @group_id
+        xml << "  <gContact:groupMembershipInfo deleted='false' href='#{@group_id}'/>\n" if @group_id
 
         @data.each do |key, parsed|
           xml << handle_data(key, parsed, 2)
