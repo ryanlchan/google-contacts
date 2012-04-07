@@ -18,6 +18,8 @@ module GContacts
         @entries = data["entry"].map {|entry| Element.new(entry)}
       elsif data["entry"]
         @entries = [Element.new(data["entry"])]
+      else
+        @entries = []
       end
 
       if data["link"]
@@ -32,7 +34,7 @@ module GContacts
 
       @id, @updated, @title, @author = data["id"], data["updated"], data["title"], data["author"]
       @per_page, @start_index, @total_results = data["openSearch:itemsPerPage"].to_i, data["openSearch:startIndex"].to_i, data["openSearch:totalResults"].to_i
-      @category = @entries.first.category
+      @category = @entries.first.category unless @entries.empty?
     end
 
     def each; @entries.each {|e| yield e} end
