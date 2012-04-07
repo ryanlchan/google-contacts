@@ -1,6 +1,6 @@
 module GContacts
   class Element
-    attr_accessor :title, :content, :data, :category, :etag, :category_tag
+    attr_accessor :title, :content, :data, :category, :etag, :group_id
     attr_reader :id, :edit_uri, :modifier_flag, :updated, :batch
 
     ##
@@ -50,6 +50,11 @@ module GContacts
         end
       end
 
+      if entry["gContact:groupMembershipInfo"]
+        @modifier_flag = :delete if entry["gContact:groupMembershipInfo"]["@deleted"] == "true"
+        @group_id = entry["gContact:groupMembershipInfo"]["@href"]
+      end
+
       # Need to know where to send the update request
       if entry["link"].is_a?(Array)
         entry["link"].each do |link|
@@ -79,12 +84,11 @@ module GContacts
       end
 
       unless @modifier_flag == :delete
-        xml << "  <atom:category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/g/2008##{@category}'"
-        xml << " label='#{@category_tag}'" if @category_tag
-        xml << "/>\n"
+        xml << "  <atom:category scheme='http://schemas.google.com/g/2005#kind' term='http://schemas.google.com/g/2008##{@category}'/>\n"
         xml << "  <updated>#{Time.now.utc.iso8601}</updated>\n"
         xml << "  <atom:content type='text'>#{@content}</atom:content>\n"
         xml << "  <atom:title>#{@title}</atom:title>\n"
+        xml << "  <gContact:groupMembershipInfo deleted='false' href='#{@group_id}'/>" if @group_id
 
         @data.each do |key, parsed|
           xml << handle_data(key, parsed, 2)
