@@ -6,7 +6,11 @@ require "cgi"
 module GContacts
   class Client
     API_URI = {
-      :contacts => {:all => "https://www.google.com/m8/feeds/contacts/default/%s", :create => URI("https://www.google.com/m8/feeds/contacts/default/full"), :get => "https://www.google.com/m8/feeds/contacts/default/%s/%s", :update => "https://www.google.com/m8/feeds/contacts/default/full/%s", :batch => URI("https://www.google.com/m8/feeds/contacts/default/full/batch")},
+      :contacts => {:all => "https://www.google.com/m8/feeds/contacts/default/%s",  
+                    :get => "https://www.google.com/m8/feeds/contacts/default/%s/%s", 
+                    :update => "https://www.google.com/m8/feeds/contacts/default/full/%s",
+                    :create => URI("https://www.google.com/m8/feeds/contacts/default/full"), 
+                    :batch => URI("https://www.google.com/m8/feeds/contacts/default/full/batch")},
       :groups => {:all => "https://www.google.com/m8/feeds/groups/default/%s", :create => URI("https://www.google.com/m8/feeds/groups/default/full"), :get => "https://www.google.com/m8/feeds/groups/default/%s/%s", :update => "https://www.google.com/m8/feeds/groups/default/full/%s", :batch => URI("https://www.google.com/m8/feeds/groups/default/full/batch")}
     }
 
@@ -203,9 +207,10 @@ module GContacts
     private
     def build_query_string(params)
       return nil unless params
-
+      
       query_string = ""
-
+      
+      translate_parameters(params)
       params.each do |k, v|
         next unless v
         query_string << "&" unless query_string == ""
@@ -213,6 +218,34 @@ module GContacts
       end
 
       query_string == "" ? nil : query_string
+    end
+
+    def translate_parameters(params)
+      params.inject({}) do |all, pair|
+        key, value = pair
+        unless value.nil?
+          key = case key
+                when :limit
+                  'max-results'
+                when :offset
+                  value = value.to_i + 1
+                  'start-index'
+                when :order
+                  all['sortorder'] = 'descending' if params[:descending].nil?
+                  'orderby'
+                when :descending
+                  value = value ? 'descending' : 'ascending'
+                  'sortorder'
+                when :updated_after
+                  value = value.strftime("%Y-%m-%dT%H:%M:%S%Z") if value.respond_to? :strftime
+                  'updated-min'
+                else key
+                end
+
+          all[key] = value
+        end
+        all
+      end
     end
 
     def http_request(method, uri, args)
