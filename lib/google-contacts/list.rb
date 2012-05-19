@@ -36,6 +36,15 @@ module GContacts
       @per_page, @start_index, @total_results = data["openSearch:itemsPerPage"].to_i, data["openSearch:startIndex"].to_i, data["openSearch:totalResults"].to_i
       @category = @entries.first.category unless @entries.empty?
     end
+    
+    def merge!(list)
+      raise ArgumentError.new("Can only merge other lists") unless list.class == "GContacts::List"
+      
+      @entries << list.entries
+      @next_uri = list.next_uri
+      @previous_uri = list.previous_uri
+      return self      
+    end
 
     def each; @entries.each {|e| yield e} end
     def [](index); @entries[index] end

@@ -66,21 +66,15 @@ module GContacts
       raise ArgumentError, "Unsupported type given" unless uri
       uri = URI(uri[:all] % (args.delete(:type) || :full))
 
-      while true do
-        list = List.new(Nori.parse(http_request(:get, uri, args), :nokogiri))
-        list.each {|entry| yield entry}
-
-        # Nothing left to paginate
-        # Or just to be safe, we're about to get caught in an infinite loop
-        if list.empty? or list.next_uri.nil? or uri == list.next_uri
-          break
-        end
-
+      list = List.new(Nori.parse(http_request(:get, uri, args), :nokogiri))
+      
+      # If we have any params remove them, the URI Google returns will include them
+      args.delete(:params)
+      while !(list.next_uri.nil? || uri == list.next_uri) do
         uri = list.next_uri
-
-        # If we have any params remove them, the URI Google returns will include them
-        args.delete(:params)
+        list.merge!(List.new(Nori.parse(http_request(:get, uri, args), :nokogiri)))      
       end
+      list
     end
 
     ##
