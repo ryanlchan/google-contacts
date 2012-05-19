@@ -38,12 +38,12 @@ module GContacts
     end
     
     def merge!(list)
-      raise ArgumentError.new("Can only merge other lists") unless list.class == "GContacts::List"
+      raise ArgumentError.new("Can only merge other lists") unless list.class == self.class
       
-      @entries << list.entries
+      @entries += list.entries
       @next_uri = list.next_uri
       @previous_uri = list.previous_uri
-      return self      
+      return self     
     end
 
     def each; @entries.each {|e| yield e} end

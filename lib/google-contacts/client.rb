@@ -70,7 +70,7 @@ module GContacts
       
       # If we have any params remove them, the URI Google returns will include them
       args.delete(:params)
-      while !(list.next_uri.nil? || uri == list.next_uri) do
+      until (list.next_uri.nil? || uri == list.next_uri) do
         uri = list.next_uri
         list.merge!(List.new(Nori.parse(http_request(:get, uri, args), :nokogiri)))      
       end

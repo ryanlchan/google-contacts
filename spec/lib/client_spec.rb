@@ -76,7 +76,7 @@ describe GContacts::Client do
       expected_titles = ["Jack 1", "Jack 2", "Jack 3", "Jack 4", "Jack 5"]
 
       client = GContacts::Client.new(:access_token => "12341234")
-      client.paginate_all do |entry|
+      client.paginate_all.each do |entry|
         entry.title.should == expected_titles.shift
       end
 
@@ -271,7 +271,7 @@ describe GContacts::Client do
       expected_titles = ["Misc 1", "Misc 2"]
 
       client = GContacts::Client.new(:access_token => "12341234", :default_type => :groups)
-      client.paginate_all do |entry|
+      client.paginate_all.each do |entry|
         entry.title.should == expected_titles.shift
       end
 
