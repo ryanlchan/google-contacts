@@ -204,7 +204,7 @@ module GContacts
       
       query_string = ""
       
-      translate_parameters(params)
+      params = translate_parameters(params)
       params.each do |k, v|
         next unless v
         query_string << "&" unless query_string == ""
