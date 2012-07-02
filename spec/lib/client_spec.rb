@@ -13,7 +13,7 @@ describe GContacts::Client do
       contacts = client.all(:params => {"updated-min" => "1234"})
 
       contacts.id.should == "john.doe@gmail.com"
-      contacts.updated.to_s.should == "2012-04-05T21:46:31+00:00"
+      contacts.updated.to_s.should == "2012-04-05T21:46:31.537Z"
       contacts.title.should == "Johnny's Contacts"
       contacts.author.should == {"name" => "Johnny", "email" => "john.doe@gmail.com"}
       contacts.next_uri.should be_nil

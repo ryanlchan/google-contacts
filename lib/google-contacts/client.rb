@@ -154,7 +154,7 @@ module GContacts
     # Immediately removes the element on Google
     # @param [GContacts::Element] Element to delete
     #
-    # @raise [Net::HTTPError]
+    # @raise [Net::HTTPError]oup
     # @raise [GContacts::InvalidRequest]
     #
     def delete!(element)
@@ -231,7 +231,7 @@ module GContacts
                   value = value ? 'descending' : 'ascending'
                   'sortorder'
                 when :updated_after
-                  value = value.strftime("%Y-%m-%dT%H:%M:%S%Z") if value.respond_to? :strftime
+                  value = value.iso8601 if value.respond_to? :iso8601
                   'updated-min'
                 else key
                 end
