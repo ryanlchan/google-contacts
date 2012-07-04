@@ -74,7 +74,7 @@ module GContacts
         batch_contacts = List.new(Nori.parse(http_request(:get, uri, args), :nokogiri))
         block.call(batch_contacts) if block_given?
         contacts.merge!(batch_contacts) unless block_given?
-        uri = (uri == contacts.next_uri ? nil : contacts.next_uri)
+        uri = (uri == batch_contacts.next_uri ? nil : batch_contacts.next_uri)
       end
       contacts
     end
