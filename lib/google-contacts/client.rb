@@ -51,7 +51,7 @@ module GContacts
     end
 
     ##
-    # Repeatedly calls {#all} until all data is loaded
+    # Repeatedly calls {#find_in_batches} until all data is loaded
     # @param [Hash] args
     # @option args [Hash, Optional] :params Query string arguments when sending the API request
     # @option args [Hash, Optional] :headers Any additional headers to pass with the API request
@@ -61,21 +61,24 @@ module GContacts
     # @raise [Net::HTTPError]
     #
     # @return [GContacts::List] List containing all the returned entries
-    def paginate_all(args={})
+    def find_in_batches(args={}, &block)
       uri = API_URI[args.delete(:api_type) || @options[:default_type]]
       raise ArgumentError, "Unsupported type given" unless uri
       uri = URI(uri[:all] % (args.delete(:type) || :full))
 
-      list = List.new(Nori.parse(http_request(:get, uri, args), :nokogiri))
+      contacts = List.new()
       
       # If we have any params remove them, the URI Google returns will include them
       args.delete(:params)
-      until (list.next_uri.nil? || uri == list.next_uri) do
-        uri = list.next_uri
-        list.merge!(List.new(Nori.parse(http_request(:get, uri, args), :nokogiri)))      
+      until (uri.nil?) do
+        batch_contacts = List.new(Nori.parse(http_request(:get, uri, args), :nokogiri))
+        block.call(batch_contacts) if block_given?
+        contacts.merge!(batch_contacts) unless block_given?
+        uri = (uri == contacts.next_uri ? nil : contacts.next_uri)
       end
-      list
+      contacts
     end
+    alias :paginate_all :find_in_batches
 
     ##
     # Get a single contact or group from the server
