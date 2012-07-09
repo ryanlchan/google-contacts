@@ -246,41 +246,58 @@ module GContacts
     end
 
     def http_request(method, uri, args)
-      headers = args[:headers] || {}
-      headers["Authorization"] = "Bearer #{@options[:access_token]}"
-      headers["GData-Version"] = "3.0"
-
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.set_debug_output(@options[:debug_output]) if @options[:debug_output]
-      http.use_ssl = true
-
-      if @options[:verify_ssl]
-        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-      else
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      end
-
-      http.start
-
       query_string = build_query_string(args[:params])
       request_uri = query_string ? "#{uri.request_uri}?#{query_string}" : uri.request_uri
+      token = @options[:access_token]
+      headers = args[:headers] || {}
+      headers["GData-Version"] = "3.0"
 
-      # GET
-      if method == :get
-        response = http.request_get(request_uri, headers)
-      # POST
-      elsif method == :post
-        response = http.request_post(request_uri, args.delete(:body), headers)
-      # PUT
-      elsif method == :put
-        response = http.request_put(request_uri, args.delete(:body), headers)
-      # DELETE
-      elsif method == :delete
-        response = http.request(Net::HTTP::Delete.new(request_uri, headers))
-      else
-        raise ArgumentError, "Invalid method #{method}"
+      if token.is_a?(String)        
+        headers["Authorization"] = "Bearer #{@options[:access_token]}"
+  
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.set_debug_output(@options[:debug_output]) if @options[:debug_output]
+        http.use_ssl = true
+  
+        if @options[:verify_ssl]
+          http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        else
+          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
+  
+        http.start
+    
+        # GET
+        if method == :get
+          response = http.request_get(request_uri, headers)
+        # POST
+        elsif method == :post
+          response = http.request_post(request_uri, args.delete(:body), headers)
+        # PUT
+        elsif method == :put
+          response = http.request_put(request_uri, args.delete(:body), headers)
+        # DELETE
+        elsif method == :delete
+          response = http.request(Net::HTTP::Delete.new(request_uri, headers))
+        else
+          raise ArgumentError, "Invalid method #{method}"
+        end
+      elsif token.is_a?(OAuth::AccessToken)
+        if method == :get
+          response = token.get(request_uri, headers)
+        # POST
+        elsif method == :post
+          response = token.post(request_uri, args.delete(:body), headers)
+        # PUT
+        elsif method == :put
+          response = token.put(request_uri, args.delete(:body), headers)
+        # DELETE
+        elsif method == :delete
+          response = token.dekete(request_uri, headers)
+        else
+          raise ArgumentError, "Invalid method #{method}"
+        end
       end
-
       if response.code == "400" or response.code == "412" or response.code == "404"
         raise InvalidRequest.new("#{response.body} (HTTP #{response.code})")
       elsif response.code == "401"
