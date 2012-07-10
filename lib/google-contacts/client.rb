@@ -68,13 +68,13 @@ module GContacts
 
       contacts = List.new()
       
-      # If we have any params remove them, the URI Google returns will include them
-      args.delete(:params)
       until (uri.nil?) do
         batch_contacts = List.new(Nori.parse(http_request(:get, uri, args), :nokogiri))
         block.call(batch_contacts) if block_given?
         contacts.merge!(batch_contacts) unless block_given?
         uri = (uri == batch_contacts.next_uri ? nil : batch_contacts.next_uri)
+        # If we have any params remove them, the URI Google returns will include them
+        args.delete(:params) if uri
       end
       contacts
     end
