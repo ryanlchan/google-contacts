@@ -1,6 +1,6 @@
 module GContacts
   class Element
-    attr_accessor :title, :content, :data, :category, :etag, :group_id
+    attr_accessor :title, :content, :data, :category, :etag, :group_id, :name, :email
     attr_reader :id, :edit_uri, :modifier_flag, :updated, :batch
 
     ##
@@ -11,7 +11,7 @@ module GContacts
       @data = {}
       return unless entry
 
-      @id, @updated, @content, @title, @etag = entry["id"], entry["updated"], entry["content"], entry["title"], entry["@gd:etag"]
+      @id, @updated, @content, @title, @etag, @name = entry["id"], entry["updated"], entry["content"], entry["title"], entry["@gd:etag"], entry["gd:name"][0]["gd:fullName"]
       if entry["category"]
         @category = entry["category"]["@term"].split("#", 2).last
         @category_tag = entry["category"]["@label"] if entry["category"]["@label"]
