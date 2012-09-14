@@ -11,7 +11,7 @@ module GContacts
       @data = {}
       return unless entry
 
-      @id, @updated, @content, @title, @etag, @name = entry["id"], entry["updated"], entry["content"], entry["title"], entry["@gd:etag"], entry["gd:name"][0]["gd:fullName"]
+      @id, @updated, @content, @title, @etag, @name = entry["id"], entry["updated"], entry["content"], entry["title"], entry["@gd:etag"], entry["gd:name"]
       if entry["category"]
         @category = entry["category"]["@term"].split("#", 2).last
         @category_tag = entry["category"]["@label"] if entry["category"]["@label"]
