@@ -247,12 +247,12 @@ module GContacts
 
     def http_request(method, uri, args)
       query_string = build_query_string(args[:params])
-      request_uri = query_string ? "#{uri.request_uri}?#{query_string}" : uri.request_uri
       token = @options[:access_token]
       headers = args[:headers] || {}
       headers["GData-Version"] = "3.0"
 
-      if token.is_a?(String)        
+      if token.is_a?(String)
+        request_uri = query_string ? "#{uri.request_uri}?#{query_string}" : uri.request_uri
         headers["Authorization"] = "Bearer #{@options[:access_token]}"
   
         http = Net::HTTP.new(uri.host, uri.port)
@@ -283,6 +283,7 @@ module GContacts
           raise ArgumentError, "Invalid method #{method}"
         end
       elsif token.is_a?(OAuth::AccessToken)
+        request_uri = query_string ? "#{uri.to_s}?#{query_string}" : uri.to_s
         if method == :get
           response = token.get(request_uri, headers)
         # POST
