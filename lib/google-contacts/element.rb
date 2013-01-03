@@ -1,6 +1,6 @@
 module GContacts
   class Element
-    attr_accessor :title, :content, :data, :category, :etag, :group_id, :name, :email
+    attr_accessor :title, :content, :data, :category, :etag, :group_id, :name, :email, :phones
     attr_reader :id, :edit_uri, :modifier_flag, :updated, :batch, :photo_uri
 
     ##
@@ -64,6 +64,16 @@ module GContacts
           elsif (link["@rel"].match(/rel#photo$/) && link["@gd:etag"] != nil)
             @photo_uri = URI(link["@href"])
           end
+        end
+      end
+
+      @phones = []
+      if entry["gd:phoneNumber"].is_a?(Array)
+        entry["gd:phoneNumber"].each do |phone|
+          new_phone = {}
+          new_phone['number'] = phone
+          new_phone['type'] = phone.attributes['@rel']
+          @phones << new_phone
         end
       end
     end
