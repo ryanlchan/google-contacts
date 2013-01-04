@@ -1,7 +1,7 @@
 module GContacts
   class Element
-    attr_accessor :title, :content, :data, :category, :etag, :group_id, :name, :email, :phones
-    attr_reader :id, :edit_uri, :modifier_flag, :updated, :batch, :photo_uri
+    attr_accessor :title, :content, :data, :category, :etag, :group_id, :name, :email
+    attr_reader :id, :edit_uri, :modifier_flag, :updated, :batch, :photo_uri, :phones
 
     ##
     # Creates a new element by parsing the returned entry from Google
