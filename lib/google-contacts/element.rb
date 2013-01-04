@@ -86,7 +86,9 @@ module GContacts
     ##
     # Converts the entry into XML to be sent to Google
     def to_xml(batch=false)
-      xml = "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom' xmlns:gd='http://schemas.google.com/g/2005'"
+      xml = "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom'"
+      xml << " xmlns:gd='http://schemas.google.com/g/2005'"
+      xml << " xmlns:gContact='http://schemas.google.com/contact/2008'"
       xml << " gd:etag='#{@etag}'" if @etag
       xml << ">\n"
 
