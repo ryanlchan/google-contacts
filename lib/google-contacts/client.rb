@@ -2,10 +2,14 @@ require "net/https"
 require "nokogiri"
 require "nori"
 require "cgi"
+require "json"
 
 module GContacts
   class Client
+    attr_reader :options
+  
     API_URI = {
+      :oauth => {:update => "https://accounts.google.com/o/oauth2/token"},
       :contacts => {:all => "https://www.google.com/m8/feeds/contacts/default/%s",  
                     :get => "https://www.google.com/m8/feeds/contacts/default/%s/%s", 
                     :update => "https://www.google.com/m8/feeds/contacts/default/full/%s",
@@ -31,7 +35,36 @@ module GContacts
 
       @options = {:default_type => :contacts}.merge(args)
     end
-
+    
+    def valid_token?
+      begin
+        self.all :params => {:limit => 1}
+      rescue Exception => e
+        return false
+      end
+      true
+    end
+    
+    ##
+    # Refreshes the authentication token.
+    # @param [String] client_id of the application
+    # @param [String] client_secret of the application
+    # @param [String] refresh_token which was originally passed to the user on login
+    #
+    # @raise [Net::HTTPError]
+    #
+    def refresh_token!(client_id, client_secret, refresh_token)
+      uri = API_URI[:oauth]
+      raise ArgumentError, "Unsupported type given" unless uri
+      
+      data = http_request(:post, URI(uri[:update]), :body => {:client_id => client_id, :client_secret => client_secret, :refresh_token => refresh_token, :grant_type => "refresh_token"}.collect{|k,v| "#{k}=#{v}"}.join("&"))
+      
+      token = JSON.parse(data)
+      
+      @options[:access_token] = token["access_token"]
+      @options[:expires_at] = DateTime.now + Rational(token["expires_in"].to_i, 86400)
+    end
+    
     ##
     # Retrieves all contacts/groups up to the default limit
     # @param [Hash] args

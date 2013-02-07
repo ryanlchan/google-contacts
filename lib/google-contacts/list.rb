@@ -13,6 +13,11 @@ module GContacts
       end
 
       data = data["feed"]
+      
+      if data.nil?
+        @entries = []
+        return
+      end
 
       if data["entry"].is_a?(Array)
         @entries = data["entry"].map {|entry| Element.new(entry)}
