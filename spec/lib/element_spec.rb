@@ -4,7 +4,7 @@ describe GContacts::Element do
   before :all do
     Nori.new(:parser => :nokogiri)
   end
-
+  
   it "changes modifier flags" do
     element = GContacts::Element.new
 
@@ -68,6 +68,14 @@ describe GContacts::Element do
 
     it "updating an entry" do
       element = GContacts::Element.new(Nori.new.parse(File.read("spec/responses/contacts/get.xml"))["entry"])
+      element.update
+
+      Nori.new.parse(element.to_xml).should == {"atom:entry"=>{"id"=>"http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/3a203c8da7ac0a8", "atom:category"=>{"@scheme"=>"http://schemas.google.com/g/2005#kind", "@term"=>"http://schemas.google.com/g/2008#contact"}, "updated"=>DateTime.parse("2012-04-06T06:02:04+00:00"), "atom:content"=>{"@type"=>"text"}, "atom:title"=>"Casey", "gd:name"=>{"gd:fullName"=>"Casey", "gd:givenName"=>"Casey"}, "gd:email"=>{"@rel"=>"http://schemas.google.com/g/2005#other", "@address"=>"casey@gmail.com", "@primary"=>"true"}, "@xmlns:atom"=>"http://www.w3.org/2005/Atom", "@xmlns:gd"=>"http://schemas.google.com/g/2005", "@xmlns:gContact"=>"http://schemas.google.com/contact/2008", "@gd:etag"=>"\"YzllYTBkNmQwOWRlZGY1YWEyYWI5.\""}}
+    end
+    
+    it "updating an entry serialized and deserialized" do
+      element = GContacts::Element.new(Nori.new.parse(File.read("spec/responses/contacts/get.xml"))["entry"])
+      element = YAML::load(YAML::dump(element))
       element.update
 
       Nori.new.parse(element.to_xml).should == {"atom:entry"=>{"id"=>"http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/3a203c8da7ac0a8", "atom:category"=>{"@scheme"=>"http://schemas.google.com/g/2005#kind", "@term"=>"http://schemas.google.com/g/2008#contact"}, "updated"=>DateTime.parse("2012-04-06T06:02:04+00:00"), "atom:content"=>{"@type"=>"text"}, "atom:title"=>"Casey", "gd:name"=>{"gd:fullName"=>"Casey", "gd:givenName"=>"Casey"}, "gd:email"=>{"@rel"=>"http://schemas.google.com/g/2005#other", "@address"=>"casey@gmail.com", "@primary"=>"true"}, "@xmlns:atom"=>"http://www.w3.org/2005/Atom", "@xmlns:gd"=>"http://schemas.google.com/g/2005", "@xmlns:gContact"=>"http://schemas.google.com/contact/2008", "@gd:etag"=>"\"YzllYTBkNmQwOWRlZGY1YWEyYWI5.\""}}

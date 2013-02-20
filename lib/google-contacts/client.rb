@@ -36,6 +36,10 @@ module GContacts
       @options = {:default_type => :contacts}.merge(args)
     end
     
+    ##
+    # Checks whether the current token is valid. This is done by trying to retrieve one contact.
+    #
+    # @return [Boolean] True if the current access_token is valid, false otherwise.
     def valid_token?
       begin
         self.all :params => {:limit => 1}
@@ -233,8 +237,23 @@ module GContacts
       results = http_request(:post, uri[:batch], :body => xml, :headers => {"Content-Type" => "application/atom+xml"})
       List.new(Nori.new(:parser => :nokogiri).parse(results))
     end
+    
+    def set_image(element, filename)
+      result = http_request(:put, element.photo_uri, :body => File.read(filename), :headers => {"Content-Type" => "image/#{image_type(filename)}", "If-Match" => "*", "Slug" => File.basename(filename), "Content-Length" => File.read(filename).size.to_s, "Expect" => "100-continue"})
+    end
 
     private
+    def image_type(file)
+      case IO.read(file, 10)
+        when /^GIF8/ then 'gif'
+        when /^\x89PNG/ then 'png'
+        when /^\xff\xd8\xff\xe0\x00\x10JFIF/ then 'jpeg'
+        when /^\xff\xd8\xff\xe1(.*){2}Exif/ then 'jpeg'
+        when /^BM/ then 'bmp'
+      else 'unknown'
+      end
+    end
+    
     def build_query_string(params)
       return nil unless params
       
@@ -299,7 +318,7 @@ module GContacts
         end
   
         http.start
-    
+        
         # GET
         if method == :get
           response = http.request_get(request_uri, headers)
@@ -327,7 +346,7 @@ module GContacts
           response = token.put(request_uri, args.delete(:body), headers)
         # DELETE
         elsif method == :delete
-          response = token.dekete(request_uri, headers)
+          response = token.delete(request_uri, headers)
         else
           raise ArgumentError, "Invalid method #{method}"
         end

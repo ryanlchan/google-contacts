@@ -4,6 +4,22 @@ require 'date'
 describe GContacts::Client do
   include Support::ResponseMock
   
+  context "client" do
+    it "should send the correct request when updating an image" do
+      client = GContacts::Client.new :access_token => "12341234"
+      element = GContacts::Element.new(Nori.new(:parser => :nokogiri).parse(File.read("spec/responses/contacts/user_with_photo.xml"))["entry"])
+      
+      element.photo_uri.should == URI("https://www.google.com/m8/feeds/photos/media/userEmail/contactId")
+      
+      mock_response("") do |http_mock, res_mock|
+        res_mock.stub(:code).and_return("200")
+        http_mock.should_receive(:request_put).with("/m8/feeds/photos/media/userEmail/contactId", File.read("spec/responses/lena.jpg"), hash_including("Authorization" => "Bearer 12341234", "Content-Type" => "image/jpeg", "If-Match" => "*")).and_return(res_mock)
+      end
+      
+      client.set_image element, "spec/responses/lena.jpg"
+    end
+  end
+  
   context "oauth" do
     it "should refresh the token" do
       mock_response(File.read("spec/responses/oauth/refresh_token.json")) do |http_mock, res_mock|
@@ -19,7 +35,8 @@ describe GContacts::Client do
   
   it "should detect a wrong auth token" do
     mock_response("") do |http_mock, res_mock|
-      http_mock.should_receive(:request_get).with("/m8/feeds/contacts/default/full?max-results=1", hash_including("Authorization" => "Bearer 12341234")).and_return({:status => 401})
+      res_mock.stub(:code).and_return("401")
+      http_mock.should_receive(:request_get).with("/m8/feeds/contacts/default/full?max-results=1", hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
     end
     
     client = GContacts::Client.new(:access_token => "12341234")
