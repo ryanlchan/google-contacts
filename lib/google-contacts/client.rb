@@ -6,10 +6,10 @@ require "cgi"
 module GContacts
   class Client
     API_URI = {
-      :contacts => {:all => "https://www.google.com/m8/feeds/contacts/default/%s",  
-                    :get => "https://www.google.com/m8/feeds/contacts/default/%s/%s", 
+      :contacts => {:all => "https://www.google.com/m8/feeds/contacts/default/%s",
+                    :get => "https://www.google.com/m8/feeds/contacts/default/%s/%s",
                     :update => "https://www.google.com/m8/feeds/contacts/default/full/%s",
-                    :create => URI("https://www.google.com/m8/feeds/contacts/default/full"), 
+                    :create => URI("https://www.google.com/m8/feeds/contacts/default/full"),
                     :batch => URI("https://www.google.com/m8/feeds/contacts/default/full/batch")},
       :groups => {:all => "https://www.google.com/m8/feeds/groups/default/%s", :create => URI("https://www.google.com/m8/feeds/groups/default/full"), :get => "https://www.google.com/m8/feeds/groups/default/%s/%s", :update => "https://www.google.com/m8/feeds/groups/default/full/%s", :batch => URI("https://www.google.com/m8/feeds/groups/default/full/batch")}
     }
@@ -47,7 +47,7 @@ module GContacts
       raise ArgumentError, "Unsupported type given" unless uri
 
       response = http_request(:get, URI(uri[:all] % (args.delete(:type) || :full)), args)
-      List.new(Nori.parse(response, :nokogiri))
+      List.new(nori_parse(response))
     end
 
     ##
@@ -67,9 +67,9 @@ module GContacts
       uri = URI(uri[:all] % (args.delete(:type) || :full))
 
       contacts = List.new()
-      
+
       until (uri.nil?) do
-        batch_contacts = List.new(Nori.parse(http_request(:get, uri, args), :nokogiri))
+        batch_contacts = List.new(nori_parse(http_request(:get, uri, args)))
         block.call(batch_contacts) if block_given?
         contacts.merge!(batch_contacts) unless block_given?
         uri = (uri == batch_contacts.next_uri ? nil : batch_contacts.next_uri)
@@ -97,7 +97,7 @@ module GContacts
       uri = API_URI[args.delete(:api_type) || @options[:default_type]]
       raise ArgumentError, "Unsupported type given" unless uri
 
-      response = Nori.parse(http_request(:get, URI(uri[:get] % [args.delete(:type) || :full, id]), args), :nokogiri)
+      response = nori_parse(http_request(:get, URI(uri[:get] % [args.delete(:type) || :full, id]), args))
 
       if response and response["entry"]
         Element.new(response["entry"])
@@ -121,7 +121,7 @@ module GContacts
 
       xml = "<?xml version='1.0' encoding='UTF-8'?>\n#{element.to_xml}"
 
-      data = Nori.parse(http_request(:post, uri[:create], :body => xml, :headers => {"Content-Type" => "application/atom+xml"}), :nokogiri)
+      data = nori_parse(http_request(:post, uri[:create], :body => xml, :headers => {"Content-Type" => "application/atom+xml"}))
       unless data["entry"]
         raise InvalidResponse, "Created but response wasn't a valid element"
       end
@@ -145,7 +145,7 @@ module GContacts
 
       xml = "<?xml version='1.0' encoding='UTF-8'?>\n#{element.to_xml}"
 
-      data = Nori.parse(http_request(:put, URI(uri[:get] % [:base, File.basename(element.id)]), :body => xml, :headers => {"Content-Type" => "application/atom+xml", "If-Match" => element.etag}), :nokogiri)
+      data = nori_parse(http_request(:put, URI(uri[:get] % [:base, File.basename(element.id)]), :body => xml, :headers => {"Content-Type" => "application/atom+xml", "If-Match" => element.etag}))
       unless data["entry"]
         raise InvalidResponse, "Updated but response wasn't a valid element"
       end
@@ -198,15 +198,15 @@ module GContacts
       xml << "</feed>"
 
       results = http_request(:post, uri[:batch], :body => xml, :headers => {"Content-Type" => "application/atom+xml"})
-      List.new(Nori.parse(results, :nokogiri))
+      List.new(nori_parse(results))
     end
 
     private
     def build_query_string(params)
       return nil unless params
-      
+
       query_string = ""
-      
+
       params = translate_parameters(params)
       params.each do |k, v|
         next unless v
@@ -252,21 +252,21 @@ module GContacts
       headers = args[:headers] || {}
       headers["GData-Version"] = "3.0"
 
-      if token.is_a?(String)        
+      if token.is_a?(String)
         headers["Authorization"] = "Bearer #{@options[:access_token]}"
-  
+
         http = Net::HTTP.new(uri.host, uri.port)
         http.set_debug_output(@options[:debug_output]) if @options[:debug_output]
         http.use_ssl = true
-  
+
         if @options[:verify_ssl]
           http.verify_mode = OpenSSL::SSL::VERIFY_PEER
         else
           http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         end
-  
+
         http.start
-    
+
         # GET
         if method == :get
           response = http.request_get(request_uri, headers)
@@ -308,5 +308,12 @@ module GContacts
 
       response.body
     end
+
+    # Wrapper to send arguments to Nori's new instance-based parser
+    def nori_parse(args)
+      @nori_parser ||= Nori.new
+      @nori_parser.parse(args)
+    end
+
   end
 end
