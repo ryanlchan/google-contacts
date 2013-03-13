@@ -9,11 +9,9 @@ describe GContacts::Client do
       client = GContacts::Client.new :access_token => "12341234"
       element = GContacts::Element.new(Nori.new(:parser => :nokogiri).parse(File.read("spec/responses/contacts/user_with_photo.xml"))["entry"])
       
-      element.photo_uri.should == URI("https://www.google.com/m8/feeds/photos/media/userEmail/contactId")
-      
       mock_response("") do |http_mock, res_mock|
         res_mock.stub(:code).and_return("200")
-        http_mock.should_receive(:request_put).with("/m8/feeds/photos/media/userEmail/contactId", File.read("spec/responses/lena.jpg"), hash_including("Authorization" => "Bearer 12341234", "Content-Type" => "image/jpeg", "If-Match" => "*")).and_return(res_mock)
+        http_mock.should_receive(:request_put).with("/m8/feeds/photos/media/default/#{element.id}", File.read("spec/responses/lena.jpg"), hash_including("Authorization" => "Bearer 12341234", "Content-Type" => "image/jpeg", "If-Match" => "*")).and_return(res_mock)
       end
       
       client.set_image element, "spec/responses/lena.jpg"
