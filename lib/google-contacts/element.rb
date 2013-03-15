@@ -2,9 +2,9 @@ require 'net/http'
 
 module GContacts
   class Element
-    attr_accessor :title, :content, :data, :category, :etag, :group_id, :name, :email
+    attr_accessor :title, :content, :data, :category, :etag, :group_id, :name, :email, :emails
     attr_reader :id, :edit_uri, :modifier_flag, :updated, :batch, :photo_uri, :phones
-    
+
     ##
     # Creates a new element by parsing the returned entry from Google
     # @param [Hash, Optional] entry Hash representation of the XML returned from Google
@@ -14,7 +14,7 @@ module GContacts
       return unless entry
 
       @id, @updated, @content, @title, @etag, @name, @email = entry["id"], entry["updated"], entry["content"], entry["title"], entry["@gd:etag"], entry["gd:name"], entry["gd:email"]
-      
+
       @photo_uri = nil
       if entry["category"]
         @category = entry["category"]["@term"].split("#", 2).last
@@ -82,6 +82,21 @@ module GContacts
           end
 
           @phones << new_phone
+        end
+      end
+
+      @emails = []
+      if entry["gd:email"].is_a?(Array)
+        entry["gd:email"].each do |email|
+          new_email = {}
+          new_email['address'] = email
+          unless email.attributes['rel'].nil?
+            new_email['type'] = email.attributes['rel']
+          else
+            new_email['type'] = email.attributes['label']
+          end
+
+          @emails << new_email
         end
       end
     end
