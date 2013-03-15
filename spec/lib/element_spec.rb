@@ -50,7 +50,7 @@ describe GContacts::Element do
       element = GContacts::Element.new(parser.parse(File.read("spec/responses/contacts/get.xml"))["entry"])
       element.delete
 
-      parser.parse(element.to_xml).should == {"atom:entry" => {"id" => "http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/3a203c8da7ac0a8", "@gd:etag" => '"YzllYTBkNmQwOWRlZGY1YWEyYWI5."', "@xmlns:atom" => "http://www.w3.org/2005/Atom", "@xmlns:gd" => "http://schemas.google.com/g/2005"}}
+      parser.parse(element.to_xml).should == {"atom:entry" => {"id"=>"http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/3a203c8da7ac0a8", "@xmlns:atom"=>"http://www.w3.org/2005/Atom", "@xmlns:gd"=>"http://schemas.google.com/g/2005", "@xmlns:gContact"=>"http://schemas.google.com/contact/2008", "@gd:etag"=>"\"YzllYTBkNmQwOWRlZGY1YWEyYWI5.\""}}
     end
 
     it "with creating an entry" do
