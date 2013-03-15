@@ -1,8 +1,10 @@
+require 'net/http'
+
 module GContacts
   class Element
-    attr_accessor :title, :content, :data, :category, :etag, :group_id
-    attr_reader :id, :edit_uri, :modifier_flag, :updated, :batch
-
+    attr_accessor :title, :content, :data, :category, :etag, :group_id, :name, :email
+    attr_reader :id, :edit_uri, :modifier_flag, :updated, :batch, :photo_uri, :phones
+    
     ##
     # Creates a new element by parsing the returned entry from Google
     # @param [Hash, Optional] entry Hash representation of the XML returned from Google
@@ -11,7 +13,9 @@ module GContacts
       @data = {}
       return unless entry
 
-      @id, @updated, @content, @title, @etag = entry["id"], entry["updated"], entry["content"], entry["title"], entry["@gd:etag"]
+      @id, @updated, @content, @title, @etag, @name, @email = entry["id"], entry["updated"], entry["content"], entry["title"], entry["@gd:etag"], entry["gd:name"], entry["gd:email"]
+      
+      @photo_uri = nil
       if entry["category"]
         @category = entry["category"]["@term"].split("#", 2).last
         @category_tag = entry["category"]["@label"] if entry["category"]["@label"]
@@ -19,7 +23,7 @@ module GContacts
 
       # Parse out all the relevant data
       entry.each do |key, unparsed|
-        if key =~ /^gd:/
+        if key =~ /^(gd:|gContact:)/
           if unparsed.is_a?(Array)
             @data[key] = unparsed.map {|v| parse_element(v)}
           else
@@ -60,8 +64,24 @@ module GContacts
         entry["link"].each do |link|
           if link["@rel"] == "edit"
             @edit_uri = URI(link["@href"])
-            break
+          elsif (link["@rel"].match(/rel#photo$/) && link["@gd:etag"] != nil)
+            @photo_uri = URI(link["@href"])
           end
+        end
+      end
+
+      @phones = []
+      if entry["gd:phoneNumber"].is_a?(Array)
+        entry["gd:phoneNumber"].each do |phone|
+          new_phone = {}
+          new_phone['number'] = phone
+          unless phone.attributes['rel'].nil?
+            new_phone['type'] = phone.attributes['rel']
+          else
+            new_phone['type'] = phone.attributes['label']
+          end
+
+          @phones << new_phone
         end
       end
     end
@@ -69,7 +89,9 @@ module GContacts
     ##
     # Converts the entry into XML to be sent to Google
     def to_xml(batch=false)
-      xml = "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom' xmlns:gd='http://schemas.google.com/g/2005'"
+      xml = "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom'"
+      xml << " xmlns:gd='http://schemas.google.com/g/2005'"
+      xml << " xmlns:gContact='http://schemas.google.com/contact/2008'"
       xml << " gd:etag='#{@etag}'" if @etag
       xml << ">\n"
 
@@ -212,3 +234,4 @@ module GContacts
     end
   end
 end
+
