@@ -72,32 +72,44 @@ module GContacts
 
       @phones = []
       if entry["gd:phoneNumber"].is_a?(Array)
-        entry["gd:phoneNumber"].each do |phone|
-          new_phone = {}
-          new_phone['number'] = phone
-          unless phone.attributes['rel'].nil?
-            new_phone['type'] = phone.attributes['rel']
-          else
-            new_phone['type'] = phone.attributes['label']
-          end
+        nodes = entry["gd:phoneNumber"]
+      elsif !entry["gd:phoneNumber"].nil?
+        nodes = [entry["gd:phoneNumber"]]
+      else
+        nodes = []
+      end
 
-          @phones << new_phone
+      nodes.each do |phone|
+        new_phone = {}
+        new_phone['number'] = phone
+        unless phone.attributes['rel'].nil?
+          new_phone['type'] = phone.attributes['rel']
+        else
+          new_phone['type'] = phone.attributes['label']
         end
+
+        @phones << new_phone
       end
 
       @emails = []
       if entry["gd:email"].is_a?(Array)
-        entry["gd:email"].each do |email|
-          new_email = {}
-          new_email['address'] = email
-          unless email.attributes['rel'].nil?
-            new_email['type'] = email.attributes['rel']
-          else
-            new_email['type'] = email.attributes['label']
-          end
+        nodes = entry["gd:email"]
+      elsif !entry["gd:email"].nil?
+        nodes = [entry["gd:email"]]
+      else
+        nodes = []
+      end
 
-          @emails << new_email
+      nodes.each do |email|
+        new_email = {}
+        new_email['address'] = email['@address']
+        unless email['@rel'].nil?
+          new_email['type'] = email['@rel']
+        else
+          new_email['type'] = email['@label']
         end
+
+        @emails << new_email
       end
     end
 

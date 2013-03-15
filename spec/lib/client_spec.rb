@@ -68,6 +68,8 @@ describe GContacts::Client do
       contact.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/fd8fb1a55f2916e")
       contact.etag.should == '"OWUxNWM4MTEzZjEyZTVjZTQ1Mjgy."'
       contact.data.should ==  {"gd:name"=>[{"gd:fullName"=>"Steve Stephson", "gd:givenName"=>"Steve", "gd:familyName"=>"Stephson"}], "gd:email"=>[{"@rel"=>"http://schemas.google.com/g/2005#other", "@address"=>"steve.stephson@gmail.com", "@primary"=>"true"}, {"@rel"=>"http://schemas.google.com/g/2005#other", "@address"=>"steve@gmail.com"}], "gd:phoneNumber"=>[{"text"=>"3005004000", "@rel"=>"http://schemas.google.com/g/2005#mobile"}, {"text"=>"+130020003000", "@rel"=>"http://schemas.google.com/g/2005#work"}], "gContact:groupMembershipInfo"=>[{"@deleted"=>"false", "@href"=>"http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/6"}]}
+      contact.emails.should == [{"type"=>"http://schemas.google.com/g/2005#other", "address"=>"steve.stephson@gmail.com"}, {"type"=>"http://schemas.google.com/g/2005#other", "address"=>"steve@gmail.com"} ]
+      contact.phones.should == [{"type"=>"http://schemas.google.com/g/2005#mobile", "number"=>"3005004000"}, {"type"=>"http://schemas.google.com/g/2005#work", "number"=>"+130020003000"}]
 
       contact = contacts[1]
       contact.id.should == "http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/894bc75ebb5187d"
@@ -84,6 +86,8 @@ describe GContacts::Client do
       contact.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/cd046ed518f0fb0")
       contact.etag.should == '"ZWVhMDQ0MWI0MWM0YTJkM2MzY2Zh."'
       contact.data.should == {"gd:name"=>[{"gd:fullName"=>"Dave \"Terry\" Pratchett", "gd:givenName"=>"Dave", "gd:additionalName"=>"\"Terry\"", "gd:familyName"=>"Pratchett"}], "gd:organization"=>[{"gd:orgName"=>"Foo Bar Inc", "@rel"=>"http://schemas.google.com/g/2005#work"}], "gd:email"=>[{"@rel"=>"http://schemas.google.com/g/2005#home", "@address"=>"dave.pratchett@gmail.com", "@primary"=>"true"}], "gd:phoneNumber"=>[{"text"=>"7003002000", "@rel"=>"http://schemas.google.com/g/2005#mobile"}], "gContact:groupMembershipInfo"=>[{"@deleted"=>"false", "@href"=>"http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/6"}]}
+      contact.emails.should == [{"type"=>"http://schemas.google.com/g/2005#home", "address"=>"dave.pratchett@gmail.com"}]
+      contact.phones.should == [{"type"=>"http://schemas.google.com/g/2005#mobile", "number"=>"7003002000"}]
 
       contact = contacts[3]
       contact.id.should == "http://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/a1941d3d13cdc66"
@@ -92,6 +96,8 @@ describe GContacts::Client do
       contact.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/full/a1941d3d13cdc66")
       contact.etag.should == '"Yzg3MTNiODJlMTRlZjZjN2EyOGRm."'
       contact.data.should == {"gd:name"=>[{"gd:fullName"=>"Jane Doe", "gd:givenName"=>"Jane", "gd:familyName"=>"Doe"}], "gd:email"=>[{"@rel"=>"http://schemas.google.com/g/2005#home", "@address"=>"jane.doe@gmail.com", "@primary"=>"true"}], "gd:phoneNumber"=>[{"text"=>"16004003000", "@rel"=>"http://schemas.google.com/g/2005#mobile"}], "gd:structuredPostalAddress"=>[{"gd:formattedAddress"=>"5 Market St\n        San Francisco\n        CA", "gd:street"=>"5 Market St", "gd:city"=>"San Francisco", "gd:region"=>"CA", "@rel"=>"http://schemas.google.com/g/2005#home"}], "gContact:groupMembershipInfo"=>[{"@deleted"=>"false", "@href"=>"http://www.google.com/m8/feeds/groups/john.doe%40gmail.com/base/6"}]}
+      contact.emails.should == [{"type"=>"http://schemas.google.com/g/2005#home", "address"=>"jane.doe@gmail.com"}]
+      contact.phones.should == [{"type"=>"http://schemas.google.com/g/2005#mobile", "number"=>"16004003000"}]
     end
 
     it "paginates through all" do
