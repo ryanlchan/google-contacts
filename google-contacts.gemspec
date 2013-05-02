@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project         = "google-contacts"
 
   s.add_runtime_dependency "nokogiri", "~>1.5.0"
-  s.add_runtime_dependency "nori", "~>2.0.3"
+  s.add_runtime_dependency "nori", "~>2.2"
 
   s.add_runtime_dependency "jruby-openssl", "~>0.7.0" if RUBY_PLATFORM == "java"
 

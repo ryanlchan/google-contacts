@@ -1,3 +1,5 @@
+# encoding: US-ASCII
+
 require "net/https"
 require "nokogiri"
 require "nori"
