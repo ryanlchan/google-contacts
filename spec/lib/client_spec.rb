@@ -26,7 +26,11 @@ describe GContacts::Client do
       end
 
       client = GContacts::Client.new(:access_token => "12341234")
-      client.refresh_token! "client_id", "client_secret", "refresh_token"
+      token_hash = {
+        'access_token' => 'refreshed_token',
+        'expires_in'   => 3600,
+        'token_type'   => 'Bearer' }
+      client.refresh_token!("client_id", "client_secret", "refresh_token").should == token_hash
       client.options[:access_token].should == "refreshed_token"
       client.options[:expires_at].should >= DateTime.now
     end

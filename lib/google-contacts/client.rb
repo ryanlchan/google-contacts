@@ -58,7 +58,7 @@ module GContacts
     # @param [String] refresh_token which was originally passed to the user on login
     #
     # @raise [Net::HTTPError]
-    #
+    # @return [Hash] the refreshed access token hash
     def refresh_token!(client_id, client_secret, refresh_token)
       uri = API_URI[:oauth]
       raise ArgumentError, "Unsupported type given" unless uri
@@ -69,6 +69,7 @@ module GContacts
 
       @options[:access_token] = token["access_token"]
       @options[:expires_at] = DateTime.now + Rational(token["expires_in"].to_i, 86400)
+      token
     end
 
     ##
