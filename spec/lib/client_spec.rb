@@ -146,6 +146,19 @@ describe GContacts::Client do
       element.edit_uri.should == URI("https://www.google.com/m8/feeds/contacts/john.doe%40gmail.com/base/3a203c8da7ac0a8")
     end
 
+    it 'gracefully handles corrupted entries' do
+      mock_response(File.read("spec/responses/contacts/corrupted.xml")) do |http_mock, res_mock|
+        http_mock.should_receive(:request_get).with("/m8/feeds/contacts/default/full?updated-min=1234", hash_including("Authorization" => "Bearer 12341234")).and_return(res_mock)
+      end
+
+      client = GContacts::Client.new(:access_token => "12341234")
+      contacts = client.all(:params => {"updated-min" => "1234"})
+
+      contact = contacts[0]
+      contact.title.should == "Corrupted Phone"
+      contact.phones.should have(1).entry
+    end
+
     it "creates a new one" do
       client = GContacts::Client.new(:access_token => "12341234")
 

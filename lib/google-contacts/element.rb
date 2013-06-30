@@ -80,15 +80,16 @@ module GContacts
       end
 
       nodes.each do |phone|
-        new_phone = {}
-        new_phone['number'] = phone
-        unless phone.attributes['rel'].nil?
-          new_phone['type'] = phone.attributes['rel']
-        else
-          new_phone['type'] = phone.attributes['label']
+        if phone.respond_to? :attributes
+          new_phone = {}
+          new_phone['number'] = phone
+          unless phone.attributes['rel'].nil?
+            new_phone['type'] = phone.attributes['rel']
+          else
+            new_phone['type'] = phone.attributes['label']
+          end
+          @phones << new_phone
         end
-
-        @phones << new_phone
       end
 
       @emails = []
