@@ -30,9 +30,9 @@ module GContacts
       if data["link"]
         data["link"].each do |link|
           if link["@rel"] == "next"
-            @next_uri = URI(link["@href"])
+            @next_uri = parse_link(link["@href"])
           elsif link["@rel"] == "previous"
-            @previous_uri = URI(link["@href"])
+            @previous_uri = parse_link(link["@href"])
           end
         end
       end
@@ -55,6 +55,10 @@ module GContacts
     def [](index); @entries[index] end
     def empty?; @entries.empty? end
     def length; @entries.length end
+
+    def parse_link(href)
+      URI(href.gsub(/(&#38;)|(&amp;)/, '&'))
+    end
 
     alias size length
   end
